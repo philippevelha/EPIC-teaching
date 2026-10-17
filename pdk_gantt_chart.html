@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDK Development Gantt Chart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8fafc;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 30px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .header .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .gantt-wrapper {
+            padding: 30px;
+            overflow-x: auto;
+        }
+        
+        .gantt-container {
+            min-width: 1200px;
+        }
+        
+        .timeline {
+            display: flex;
+            margin-bottom: 10px;
+            padding-left: 300px;
+        }
+        
+        .month {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-weight: 600;
+            color: #1e3a8a;
+            border-bottom: 2px solid #e2e8f0;
+            font-size: 14px;
+        }
+        
+        .phase-section {
+            margin-bottom: 30px;
+        }
+        
+        .phase-header {
+            background: #f1f5f9;
+            padding: 12px 20px;
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 16px;
+            border-left: 4px solid #3b82f6;
+            margin-bottom: 10px;
+        }
+        
+        .task-row {
+            display: flex;
+            align-items: center;
+            min-height: 50px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .task-row:hover {
+            background: #fafbfc;
+        }
+        
+        .task-name {
+            width: 300px;
+            padding: 12px 20px;
+            font-size: 14px;
+            color: #334155;
+        }
+        
+        .task-timeline {
+            flex: 1;
+            display: flex;
+            position: relative;
+            height: 50px;
+            align-items: center;
+        }
+        
+        .task-bar {
+            height: 30px;
+            border-radius: 6px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .task-bar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .phase1 { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .phase2 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .phase3 { background: linear-gradient(135deg, #10b981, #059669); }
+        .phase4 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        
+        .milestone {
+            height: 40px;
+            width: 4px;
+            background: #dc2626;
+            position: relative;
+        }
+        
+        .milestone::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            width: 14px;
+            height: 14px;
+            background: #dc2626;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 30px;
+            padding: 20px 30px;
+            background: #f8fafc;
+            border-top: 2px solid #e2e8f0;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+        
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .duration {
+            font-size: 11px;
+            opacity: 0.9;
+            margin-left: 5px;
+        }
+        
+        .grid-line {
+            position: absolute;
+            width: 1px;
+            height: 100%;
+            background: #e2e8f0;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>PDK Development Timeline</h1>
+            <div class="subtitle">Silicon Photonics Process Design Kit - 12 Month Development Plan</div>
+        </div>
+        
+        <div class="gantt-wrapper">
+            <div class="gantt-container">
+                <div class="timeline">
+                    <div class="month">Month 1</div>
+                    <div class="month">Month 2</div>
+                    <div class="month">Month 3</div>
+                    <div class="month">Month 4</div>
+                    <div class="month">Month 5</div>
+                    <div class="month">Month 6</div>
+                    <div class="month">Month 7</div>
+                    <div class="month">Month 8</div>
+                    <div class="month">Month 9</div>
+                    <div class="month">Month 10</div>
+                    <div class="month">Month 11</div>
+                    <div class="month">Month 12</div>
+                </div>
+                
+                <!-- Phase 1: Component Library -->
+                <div class="phase-section">
+                    <div class="phase-header">Phase 1: Component Library</div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">1. Identify standard components</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase1" style="width: 8.33%; margin-left: 0%;">
+                                <span class="duration">2 wks</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">2. Design and simulate each</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase1" style="width: 16.67%; margin-left: 8.33%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">3. Fabricate test structures</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase1" style="width: 25%; margin-left: 16.67%;">
+                                <span class="duration">1.5 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">4. Measure and characterize</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase1" style="width: 16.67%; margin-left: 33.33%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">5. Extract compact models</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase1" style="width: 16.67%; margin-left: 41.67%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">6. Validate models</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase1" style="width: 8.33%; margin-left: 58.33%;">
+                                <span class="duration">2 wks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Phase 2: Layout Library -->
+                <div class="phase-section">
+                    <div class="phase-header">Phase 2: Layout Library</div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">1. Create fixed cells</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase2" style="width: 16.67%; margin-left: 25%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">2. Develop PCells</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase2" style="width: 25%; margin-left: 33.33%;">
+                                <span class="duration">1.5 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">3. Define layer stack</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase2" style="width: 8.33%; margin-left: 25%;">
+                                <span class="duration">2 wks</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">4. Create symbols</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase2" style="width: 16.67%; margin-left: 41.67%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Phase 3: Design Rules -->
+                <div class="phase-section">
+                    <div class="phase-header">Phase 3: Design Rules</div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">1. Define geometric rules</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase3" style="width: 16.67%; margin-left: 41.67%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">2. Implement DRC runsets</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase3" style="width: 16.67%; margin-left: 58.33%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">3. Develop LVS rules</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase3" style="width: 16.67%; margin-left: 66.67%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">4. Test on real designs</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase3" style="width: 8.33%; margin-left: 83.33%;">
+                                <span class="duration">2 wks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Phase 4: Documentation -->
+                <div class="phase-section">
+                    <div class="phase-header">Phase 4: Documentation</div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">1. Write component docs</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase4" style="width: 16.67%; margin-left: 58.33%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">2. Create design manual</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase4" style="width: 16.67%; margin-left: 66.67%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">3. Develop tutorials</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase4" style="width: 16.67%; margin-left: 75%;">
+                                <span class="duration">1 mo</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">4. Example designs</div>
+                        <div class="task-timeline">
+                            <div class="task-bar phase4" style="width: 8.33%; margin-left: 83.33%;">
+                                <span class="duration">2 wks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Milestones -->
+                <div class="phase-section">
+                    <div class="phase-header">Key Milestones</div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">Component Library Complete</div>
+                        <div class="task-timeline">
+                            <div class="milestone" style="margin-left: 66.67%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">Beta Release</div>
+                        <div class="task-timeline">
+                            <div class="milestone" style="margin-left: 83.33%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-row">
+                        <div class="task-name">Final Release (v1.0)</div>
+                        <div class="task-timeline">
+                            <div class="milestone" style="margin-left: 91.67%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color phase1"></div>
+                <span>Phase 1: Component Library</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color phase2"></div>
+                <span>Phase 2: Layout Library</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color phase3"></div>
+                <span>Phase 3: Design Rules</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color phase4"></div>
+                <span>Phase 4: Documentation</span>
+            </div>
+            <div class="legend-item">
+                <div style="width: 14px; height: 14px; background: #dc2626; transform: rotate(45deg);"></div>
+                <span>Key Milestones</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

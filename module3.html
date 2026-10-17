@@ -1,0 +1,3020 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="module3_files/libs/clipboard/clipboard.min.js"></script>
+<script src="module3_files/libs/quarto-html/tabby.min.js"></script>
+<script src="module3_files/libs/quarto-html/popper.min.js"></script>
+<script src="module3_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="module3_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="module3_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="module3_files/libs/quarto-html/quarto-syntax-highlighting-dfa48a90d809c806c7ea2d5aecd9fc66.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="module3_files/libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="module3_files/libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="module3_files/libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.29">
+
+  <meta name="author" content="Philippe Velha">
+  <meta name="dcterms.date" content="2026-10-17">
+  <title>Module 3: Optical and Electrical I/O</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="module3_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="module3_files/libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="module3_files/libs/revealjs/dist/theme/quarto-2abc1c5b7b5c7eecd6137558e106e4c3.css">
+  <link rel="stylesheet" href="module3.css">
+  <link href="module3_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="module3_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="module3_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="module3_files/libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="module3_files/libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="module3_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Module 3: Optical and Electrical I/O</h1>
+  <p class="subtitle">Integrated Optics Course</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Philippe Velha 
+</div>
+        <p class="quarto-title-affiliation">
+            University of Trento
+          </p>
+    </div>
+</div>
+
+  <p class="date">2026-10-17</p>
+</section>
+<section>
+<section id="module-overview" class="title-slide slide level1 center">
+<h1>Module Overview</h1>
+
+</section>
+<section id="learning-objectives" class="slide level2">
+<h2>Learning Objectives</h2>
+<ul>
+<li class="fragment">Understand coupling challenges in integrated photonics</li>
+<li class="fragment">Master grating coupler design principles</li>
+<li class="fragment">Learn polarization management techniques</li>
+<li class="fragment">Explore optical and electrical interfaces</li>
+<li class="fragment">Apply design methodologies to real devices</li>
+</ul>
+</section>
+<section id="module-structure" class="slide level2">
+<h2>Module Structure</h2>
+<ol type="1">
+<li><strong>Grating Couplers (GC)</strong> - Vertical coupling solutions</li>
+<li><strong>Edge Couplers</strong> - Horizontal coupling techniques</li>
+<li><strong>Polarization Management</strong> - PDM and diversity schemes</li>
+<li><strong>Optical Interfaces</strong> - Fiber and free-space coupling</li>
+<li><strong>Electrical Contacts</strong> - Interconnection technologies</li>
+</ol>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="GC" class="title-slide slide level1 center">
+<h1>A. Grating Couplers</h1>
+
+<img data-src="m3_grating_coupler.PNG" style="width:65.0%" class="r-stretch quarto-figure-center"><p class="caption">Grating coupler with optical fiber</p></section>
+<section id="introduction-to-grating-couplers" class="slide level2 smaller">
+<h2>Introduction to Grating Couplers</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Why Grating Couplers?</strong></p>
+<ul>
+<li>Vertical coupling from optical fiber</li>
+<li>Wafer-scale testing capability</li>
+<li>Flexible positioning on chip</li>
+<li>CMOS compatible fabrication</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Applications</strong></p>
+<ul>
+<li>Dense I/O arrays</li>
+<li>Prototyping and testing</li>
+<li>Multi-chip integration</li>
+<li>Silicon photonics platforms</li>
+</ul>
+</div></div>
+</section>
+<section id="challenges-in-grating-coupling" class="slide level2 smaller">
+<h2>Challenges in Grating Coupling</h2>
+<div class="columns">
+<div class="column" style="width:60%;">
+<h3 class="smaller" id="coupling-efficiency">1. <strong>Coupling Efficiency</strong></h3>
+<ul>
+<li>Typical efficiency: -3 to -6 dB per coupler</li>
+<li>Mode mismatch between fiber and waveguide</li>
+<li>Back-reflections and directionality issues</li>
+</ul>
+<h3 class="smaller" id="bandwidth-limitations">2. <strong>Bandwidth Limitations</strong></h3>
+<ul>
+<li>Narrow spectral bandwidth (~30-40 nm)</li>
+<li>Wavelength-dependent coupling angle</li>
+<li>Trade-off between efficiency and bandwidth</li>
+</ul>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="m3_schematic.png"></p>
+<figcaption>From the top</figcaption>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="challenges-continued" class="slide level2 smaller">
+<h2>Challenges (continued)</h2>
+<h3 id="polarization-sensitivity">3. <strong>Polarization Sensitivity</strong></h3>
+<ul>
+<li>Strong polarization dependence</li>
+<li>TE/TM mode coupling differences</li>
+<li>Requires polarization management</li>
+</ul>
+<h3 id="fabrication-tolerance">4. <strong>Fabrication Tolerance</strong></h3>
+<ul>
+<li>Sensitive to etch depth variations</li>
+<li>Sidewall roughness effects</li>
+<li>Overlay and alignment errors</li>
+</ul>
+<h3 id="temperature-sensitivity">5. <strong>Temperature Sensitivity</strong></h3>
+<ul>
+<li>Wavelength drift with temperature (~0.07 nm/°C)</li>
+<li>Requires temperature stabilization</li>
+</ul>
+</section>
+<section id="theory-and-principles" class="slide level2 smaller">
+<h2>Theory and Principles</h2>
+<h3 id="bragg-condition">Bragg Condition</h3>
+<p>The fundamental coupling condition for grating couplers:</p>
+<p><span class="math display">\[\beta = k_0 n_{eff} = k_0 n_{fiber} \sin(\theta) + m \frac{2\pi}{\Lambda}\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(\beta\)</span> = propagation constant of waveguide mode</li>
+<li><span class="math inline">\(k_0 = 2\pi/\lambda\)</span> = free-space wavenumber</li>
+<li><span class="math inline">\(n_{eff}\)</span> = effective refractive index</li>
+<li><span class="math inline">\(\theta\)</span> = fiber angle</li>
+<li><span class="math inline">\(\Lambda\)</span> = grating period</li>
+<li><span class="math inline">\(m\)</span> = diffraction order (typically ±1)</li>
+</ul>
+</section>
+<section id="coupling-efficiency-theory" class="slide level2 smaller">
+<h2>Coupling Efficiency Theory</h2>
+<div class="columns">
+<div class="column">
+<h3 class="smaller" id="power-coupling-coefficient">Power Coupling Coefficient</h3>
+<p><span class="math display">\[\eta = \left| \int \int E_{fiber}^* \cdot E_{grating} \, dx \, dy \right|^2\]</span></p>
+<h3 id="loss-mechanisms">Loss Mechanisms</h3>
+<ol type="1">
+<li><strong>Upward radiation loss</strong>: <span class="math inline">\(\alpha_{up}\)</span></li>
+<li><strong>Downward radiation loss</strong>: <span class="math inline">\(\alpha_{down}\)</span></li>
+<li><strong>Mode mismatch loss</strong>: <span class="math inline">\(\alpha_{mismatch}\)</span></li>
+<li><strong>Back-reflection loss</strong>: <span class="math inline">\(\alpha_{refl}\)</span></li>
+</ol>
+<p><span class="math display">\[\eta_{total} = \eta_{directionality} \times \eta_{overlap} \times (1 - R)\]</span></p>
+</div><div class="column">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="m3_PowerCoupling.png"></p>
+<figcaption>Schematic cross section diagram of a grating coupler</figcaption>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="grating-strength-and-directionality" class="slide level2 smaller">
+<h2>Grating Strength and Directionality</h2>
+<div class="columns">
+<div class="column">
+<h3 id="directionality">Directionality</h3>
+<p>To maximize upward coupling and minimize substrate loss:</p>
+<p><span class="math display">\[D = \frac{P_{up}}{P_{down}}\]</span></p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Bottom reflector (metal or distributed Bragg reflector)</li>
+<li>Optimized duty cycle and etch depth</li>
+<li>Blazed gratings</li>
+</ul>
+</div><div class="column">
+<h3 id="coupling-strength">Coupling Strength</h3>
+<p><span class="math display">\[\alpha = \frac{\pi}{\lambda} \Delta n_{eff} \cdot \Gamma\]</span></p>
+<p>Where <span class="math inline">\(\Delta n_{eff}\)</span> is the effective index modulation and <span class="math inline">\(\Gamma\)</span> is the confinement factor.</p>
+</div></div>
+</section>
+<section id="graphical-representation-1" class="slide level2">
+<h2>Graphical representation (1)</h2>
+
+<img data-src="m3_GraphicalSolution.png" class="r-stretch"></section>
+<section id="graphical-representation-2" class="slide level2">
+<h2>Graphical representation (2)</h2>
+
+<img data-src="m3_GraphicalSolutionGC1.png" class="r-stretch quarto-figure-center"><p class="caption">general form of the Bragg condition</p></section>
+<section id="graphical-representation-3" class="slide level2">
+<h2>Graphical representation (3)</h2>
+
+<img data-src="m3_GraphicalSolutionGC2.png" class="r-stretch quarto-figure-center"><p class="caption">in air</p></section>
+<section id="graphical-representation-4" class="slide level2">
+<h2>Graphical representation (4)</h2>
+
+<img data-src="m3_GraphicalSolutionGC3.png" class="r-stretch quarto-figure-center"><p class="caption">in silica</p></section>
+<section id="design-methodology" class="slide level2 smaller">
+<h2>Design Methodology</h2>
+<h3 id="step-1-define-specifications">Step 1: Define Specifications</h3>
+<ul>
+<li class="fragment">Target wavelength (<span class="math inline">\(\lambda_0\)</span>)</li>
+<li class="fragment">Bandwidth requirement</li>
+<li class="fragment">Polarization (TE/TM)</li>
+<li class="fragment">Maximum insertion loss</li>
+<li class="fragment">Fiber angle preference</li>
+</ul>
+</section>
+<section id="design-methodology-continued" class="slide level2 smaller">
+<h2>Design Methodology (continued)</h2>
+<h3 id="step-2-initial-parameter-selection">Step 2: Initial Parameter Selection</h3>
+<p><strong>Grating Period:</strong></p>
+<p><span class="math display">\[\Lambda = \frac{\lambda_0}{n_{eff} - n_{fiber}\sin(\theta)}\]</span></p>
+<p>Typical values:</p>
+<ul>
+<li><span class="math inline">\(\Lambda\)</span> = 500-700 nm for 1550 nm, TE mode</li>
+<li>Fiber angle: 8-15°</li>
+<li>Silicon thickness: 220 nm (SOI platform)</li>
+</ul>
+</section>
+<section id="impact-of-pitch" class="slide level2">
+<h2>Impact of pitch</h2>
+
+<img data-src="m3_TvsPitch.png" class="r-stretch quarto-figure-center"><p class="caption">T vs Pitch</p></section>
+<section id="impact-of-angle" class="slide level2">
+<h2>Impact of angle</h2>
+
+<img data-src="m3_TvsAngle.png" class="r-stretch quarto-figure-center"><p class="caption">T vs angle</p></section>
+<section id="design-methodology-continued-1" class="slide level2 smaller">
+<h2>Design Methodology (continued)</h2>
+<h3 id="step-3-optimize-design-parameters">Step 3: Optimize Design Parameters</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Parameters to optimize:</strong></p>
+<ul>
+<li>Duty cycle (40-60%)</li>
+<li>Etch depth (partial/full etch)</li>
+<li>Number of periods (20-40)</li>
+<li>Taper configuration</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Optimization methods:</strong></p>
+<ul>
+<li>2D/3D FDTD simulations</li>
+<li>EME (Eigenmode Expansion)</li>
+<li>RCWA (Rigorous Coupled Wave Analysis)</li>
+<li>Parametric sweeps</li>
+</ul>
+</div></div>
+</section>
+<section id="confront-2d3d" class="slide level2">
+<h2>Confront 2D/3D</h2>
+<p><img data-src="m3_confront2Dvs3D.png" style="width:45.0%" alt="Confront 2D 3D"> <img data-src="m3_confrontEXPvsSIM.png" style="width:45.0%" alt="Confront experiment simulation"> —</p>
+</section>
+<section id="design-methodology-continued-2" class="slide level2 smaller">
+<h2>Design Methodology (continued)</h2>
+<h3 id="step-4-back-reflector-design">Step 4: Back-Reflector Design</h3>
+<p>For improved directionality (D &gt; 10 dB):</p>
+<p><strong>Metal reflector:</strong></p>
+<ul>
+<li>Aluminum or gold layer</li>
+<li>Distance from grating: <span class="math inline">\(\lambda/(4n_{BOX})\)</span></li>
+<li>Accounts for phase matching</li>
+</ul>
+<p><strong>DBR approach:</strong></p>
+<p><span class="math display">\[d_{Si/SiO_2} = \frac{\lambda}{4n_{Si/SiO_2}}\]</span></p>
+<p>Multiple layer pairs for high reflectivity</p>
+</section>
+<section id="effect-of-the-box" class="slide level2">
+<h2>Effect of the BOX</h2>
+
+<img data-src="m3_TvsBox.png" class="r-stretch quarto-figure-center"><p class="caption">T vs Box Thickness</p></section>
+<section id="design-methodology-continued-3" class="slide level2 smaller">
+<h2>Design Methodology (continued)</h2>
+<h3 id="step-5-apodization-and-tapering">Step 5: Apodization and Tapering</h3>
+<p><strong>Apodization techniques:</strong></p>
+<ul>
+<li>Vary duty cycle along propagation</li>
+<li>Gaussian or exponential profiles</li>
+<li>Improves mode matching</li>
+</ul>
+<p><strong>Input waveguide taper:</strong></p>
+<p><span class="math display">\[w(z) = w_0 + (w_1 - w_0)\left(\frac{z}{L_{taper}}\right)^2\]</span></p>
+<p>Reduces back-reflection and improves coupling</p>
+</section>
+<section id="demo-1d-grating-coupler-design" class="slide level2 smaller">
+<h2>DEMO: 1D Grating Coupler Design</h2>
+<h3 id="example-design-parameters">Example Design Parameters</h3>
+<div class="panel-tabset">
+<ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Specifications</a></li><li><a href="#tabset-1-2">Calculated Parameters</a></li><li><a href="#tabset-1-3">Design Output</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1">
+<pre><code>Wavelength: 1550 nm
+Platform: 220 nm SOI
+Polarization: TE
+Target efficiency: &gt; -4 dB
+Bandwidth: &gt; 35 nm</code></pre>
+</div>
+<div id="tabset-1-2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href=""></a><span class="co"># Python design example</span></span>
+<span id="cb2-2"><a href=""></a>lambda_0 <span class="op">=</span> <span class="fl">1.55e-6</span>  <span class="co"># wavelength in meters</span></span>
+<span id="cb2-3"><a href=""></a>n_eff <span class="op">=</span> <span class="fl">2.84</span>        <span class="co"># effective index (TE mode)</span></span>
+<span id="cb2-4"><a href=""></a>n_fiber <span class="op">=</span> <span class="fl">1.45</span>      <span class="co"># fiber mode index</span></span>
+<span id="cb2-5"><a href=""></a>theta <span class="op">=</span> <span class="dv">10</span>          <span class="co"># fiber angle in degrees</span></span>
+<span id="cb2-6"><a href=""></a></span>
+<span id="cb2-7"><a href=""></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-8"><a href=""></a>Lambda <span class="op">=</span> lambda_0 <span class="op">/</span> (n_eff <span class="op">-</span> n_fiber <span class="op">*</span> np.sin(np.radians(theta)))</span>
+<span id="cb2-9"><a href=""></a><span class="bu">print</span>(<span class="ss">f"Grating period: </span><span class="sc">{</span>Lambda<span class="op">*</span><span class="fl">1e9</span><span class="sc">:.1f}</span><span class="ss"> nm"</span>)</span>
+<span id="cb2-10"><a href=""></a><span class="co"># Output: ~630 nm</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-3">
+<ul>
+<li><strong>Period (Λ)</strong>: 630 nm</li>
+<li><strong>Duty cycle</strong>: 50%</li>
+<li><strong>Etch depth</strong>: 70 nm</li>
+<li><strong>Number of periods</strong>: 25</li>
+<li><strong>Fiber angle</strong>: 10°</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="effect-of-polarisation" class="slide level2">
+<h2>Effect of polarisation</h2>
+</section>
+<section id="t-vs-polarization" class="slide level2">
+<h2><img data-src="m3_TvsPol.png" alt="T vs Polarization"></h2>
+</section>
+<section id="d-gc-performance-metrics" class="slide level2 smaller">
+<h2>1D GC Performance Metrics</h2>
+<h3 id="typical-performance">Typical Performance</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Peak coupling loss</td>
+<td>-3 to -5 dB</td>
+<td>With bottom reflector</td>
+</tr>
+<tr class="even">
+<td>1-dB bandwidth</td>
+<td>35-40 nm</td>
+<td>At 1550 nm</td>
+</tr>
+<tr class="odd">
+<td>Back-reflection</td>
+<td>&lt; -25 dB</td>
+<td>With proper design</td>
+</tr>
+<tr class="even">
+<td>Polarization dependence</td>
+<td>&lt; 1 dB</td>
+<td>For TE-optimized</td>
+</tr>
+<tr class="odd">
+<td>Temperature sensitivity</td>
+<td>0.07 nm/°C</td>
+<td>Wavelength shift</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="advanced-1d-gc-designs" class="slide level2 smaller">
+<h2>Advanced 1D GC Designs</h2>
+<h3 id="apodized-gratings">Apodized Gratings</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Improved bandwidth (&gt;50 nm possible)</li>
+<li>Better mode matching</li>
+<li>Reduced side lobes</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Implementation:</strong></p>
+<ul>
+<li>Non-uniform period</li>
+<li>Varying duty cycle</li>
+<li>Focusing grating structures</li>
+</ul>
+</div></div>
+<h3 id="curved-gratings">Curved Gratings</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<ul>
+<li>Compensate for mode asymmetry</li>
+<li>Improved coupling efficiency</li>
+<li>Better fiber alignment tolerance</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="m3_curvedgrating.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Curved Grating couplers"><img data-src="m3_curvedgrating.png" style="width:90.0%" alt="Curved Grating couplers"></a></p>
+<figcaption>Curved Grating couplers</figcaption>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="tolerance" class="slide level2">
+<h2>Tolerance</h2>
+
+<img data-src="m3_TvsPosition.png" class="r-stretch quarto-figure-center"><p class="caption">Position Tolerance</p></section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="Edge-coupler" class="title-slide slide level1 center">
+<h1>B. Edge Couplers</h1>
+
+</section>
+<section id="introduction-to-edge-couplers" class="slide level2 smaller">
+<h2>Introduction to Edge Couplers</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Broadband operation (&gt;100 nm)</li>
+<li>Low loss (&lt;1 dB possible)</li>
+<li>Polarization diversity capability</li>
+<li>Temperature insensitive</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Disadvantages:</strong></p>
+<ul>
+<li>Requires chip edge access</li>
+<li>Cleaving/polishing needed</li>
+<li>Limited I/O density</li>
+<li>Not for wafer-scale testing</li>
+</ul>
+</div></div>
+</section>
+<section id="nano-tapers-theory" class="slide level2 smaller">
+<h2>Nano-Tapers: Theory</h2>
+<h3 id="mode-size-mismatch-problem">Mode Size Mismatch Problem</h3>
+<p><strong>Challenge:</strong></p>
+<ul>
+<li>Fiber mode diameter: ~10 μm</li>
+<li>Silicon waveguide mode: ~0.5 μm</li>
+<li>Direct coupling loss: &gt;15 dB</li>
+</ul>
+<p><strong>Solution:</strong> Adiabatic mode conversion</p>
+
+<img data-src="m3_nanotapers.png" class="r-stretch quarto-figure-center"><p class="caption">Examples</p></section>
+<section id="nano-taper-design" class="slide level2 smaller">
+<h2>Nano-Taper Design</h2>
+<h3 id="inverse-taper-structure">Inverse Taper Structure</h3>
+<p>The waveguide width gradually decreases:</p>
+<p><span class="math display">\[w(z) = w_{wide} \cdot \exp\left(-\frac{z}{L_c}\right) + w_{tip}\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(w_{wide}\)</span> = wide waveguide width (~500 nm)</li>
+<li><span class="math inline">\(w_{tip}\)</span> = tip width (150-200 nm)</li>
+<li><span class="math inline">\(L_c\)</span> = characteristic taper length</li>
+<li><span class="math inline">\(z\)</span> = position along taper</li>
+</ul>
+</section>
+<section id="nano-taper-parameters" class="slide level2 smaller">
+<h2>Nano-Taper Parameters</h2>
+<h3 id="critical-design-parameters">Critical Design Parameters</h3>
+<ol type="1">
+<li class="fragment"><strong>Tip width</strong>: 150-200 nm
+<ul>
+<li class="fragment">Narrower = better coupling</li>
+<li class="fragment">Limited by fabrication</li>
+</ul></li>
+<li class="fragment"><strong>Taper length</strong>: 50-300 μm
+<ul>
+<li class="fragment">Longer = more adiabatic</li>
+<li class="fragment">Trade-off with chip area</li>
+</ul></li>
+<li class="fragment"><strong>Mode expansion region</strong>
+<ul>
+<li class="fragment">Low-index cladding extends mode</li>
+<li class="fragment">Polymer waveguide overlay</li>
+</ul></li>
+</ol>
+</section>
+<section id="adiabatic-condition" class="slide level2 smaller">
+<h2>Adiabatic Condition</h2>
+<h3 id="maintaining-low-loss">Maintaining Low Loss</h3>
+<p>For adiabatic mode conversion:</p>
+<p><span class="math display">\[\frac{d\beta}{dz} \ll |\beta_1 - \beta_2|^2\]</span></p>
+<p>Where <span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span> are propagation constants of the two lowest-order modes.</p>
+<p><strong>Practical rule:</strong></p>
+<ul>
+<li>Taper angle &lt; 1° for low loss</li>
+<li>Exponential tapers preferred over linear</li>
+</ul>
+</section>
+<section id="effect-of-taper-length" class="slide level2">
+<h2>Effect of taper length</h2>
+</section>
+<section id="effect-of-taper-length-1" class="slide level2">
+<h2><img data-src="m3_transmissionTaper.png" alt="Effect of taper length"></h2>
+</section>
+<section id="edge-couplers-with-overlay" class="slide level2">
+<h2>Edge Couplers with Overlay</h2>
+<h3 id="polymer-waveguide-approach">Polymer Waveguide Approach</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Structure:</strong></p>
+<ul>
+<li>Silicon nano-taper (tip: 150 nm)</li>
+<li>Polymer waveguide overlay (~3×3 μm)</li>
+<li>Gradual mode transition</li>
+<li>Index-matched to fiber</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Coupling loss: &lt; 1 dB</li>
+<li>Broad bandwidth</li>
+<li>Relaxed alignment tolerance</li>
+<li>Protects delicate tip</li>
+</ul>
+</div></div>
+</section>
+<section id="typical-structure" class="slide level2 smaller">
+<h2>typical Structure</h2>
+
+<img data-src="m3_Overlay.jpg" class="r-stretch quarto-figure-center"><p class="caption">Overlay structure</p><p>from: “Mengruo Zhang, Jieyun Wu, Zhiying Zhao, and Kaixin Chen,”Efficient and polarization insensitive edge coupler based on cascaded vertical waveguide tapers,” Opt. Express 31, 31796-31805 (2023)”</p>
+</section>
+<section id="overlay-design-considerations" class="slide level2 smaller">
+<h2>Overlay Design Considerations</h2>
+<h3 id="material-selection">Material Selection</h3>
+<p><strong>Polymer requirements:</strong></p>
+<ul>
+<li>Refractive index: 1.45-1.5</li>
+<li>Low loss at operating wavelength</li>
+<li>Thermal stability</li>
+<li>CMOS compatible</li>
+</ul>
+<p><strong>Common materials:</strong></p>
+<ul>
+<li>SU-8 photoresist</li>
+<li>BCB (Benzocyclobutene)</li>
+<li>PMMA</li>
+<li>Polyimide</li>
+</ul>
+</section>
+<section id="overlay-fabrication" class="slide level2 smaller">
+<h2>Overlay Fabrication</h2>
+<h3 id="process-flow">Process Flow</h3>
+<ol type="1">
+<li><strong>Silicon nano-taper fabrication</strong>
+<ul>
+<li>E-beam lithography for tip</li>
+<li>Careful etch control</li>
+</ul></li>
+<li><strong>Polymer deposition</strong>
+<ul>
+<li>Spin coating</li>
+<li>Controlled thickness</li>
+</ul></li>
+<li><strong>Polymer waveguide patterning</strong>
+<ul>
+<li>Lithography and etch</li>
+<li>or direct UV exposure</li>
+</ul></li>
+<li><strong>End-face preparation</strong>
+<ul>
+<li>Precision cleaving/dicing</li>
+<li>Polishing to optical quality</li>
+</ul></li>
+</ol>
+</section>
+<section id="edge-coupler-performance" class="slide level2">
+<h2>Edge Coupler Performance</h2>
+<h3 id="typical-specifications">Typical Specifications</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Nano-taper alone</th>
+<th>With overlay</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Coupling loss</td>
+<td>3-5 dB</td>
+<td>0.5-1.5 dB</td>
+</tr>
+<tr class="even">
+<td>Bandwidth</td>
+<td>&gt; 100 nm</td>
+<td>&gt; 150 nm</td>
+</tr>
+<tr class="odd">
+<td>Alignment tolerance (1 dB)</td>
+<td>±0.5 μm</td>
+<td>±1.5 μm</td>
+</tr>
+<tr class="even">
+<td>Polarization dependence</td>
+<td>&lt; 0.5 dB</td>
+<td>&lt; 0.3 dB</td>
+</tr>
+<tr class="odd">
+<td>Back-reflection</td>
+<td>&lt; -40 dB</td>
+<td>&lt; -50 dB</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="bilayer-edge-couplers" class="slide level2 smaller">
+<h2>Bilayer Edge Couplers</h2>
+<h3 id="advanced-structure">Advanced Structure</h3>
+<p><strong>Concept:</strong></p>
+<ul>
+<li>Two-layer taper structure</li>
+<li>Silicon + Silicon Nitride</li>
+<li>Optimized mode evolution</li>
+<li>Ultra-low loss possible</li>
+</ul>
+<p><strong>Performance:</strong></p>
+<ul>
+<li>Coupling loss: &lt; 0.5 dB</li>
+<li>Very broad bandwidth</li>
+<li>Excellent mode matching</li>
+</ul>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="c.-polarization-management" class="title-slide slide level1 center">
+<h1>C. Polarization Management</h1>
+
+</section>
+<section id="polarization-challenges-in-integrated-optics" class="slide level2">
+<h2>Polarization Challenges in Integrated Optics</h2>
+<h3 id="the-polarization-problem">The Polarization Problem</h3>
+<ul>
+<li class="fragment">Silicon waveguides are <strong>highly birefringent</strong></li>
+<li class="fragment">TE and TM modes have different propagation constants</li>
+<li class="fragment">Fiber polarization is <strong>random</strong> in field deployment</li>
+<li class="fragment">Most devices optimized for single polarization (TE)</li>
+<li class="fragment"><strong>Polarization-dependent loss (PDL)</strong> is critical issue</li>
+</ul>
+</section>
+<section id="polarization-dependent-loss-pdl" class="slide level2 smaller">
+<h2>Polarization Dependent Loss (PDL)</h2>
+<h3 id="definition-and-impact">Definition and Impact</h3>
+<p><span class="math display">\[PDL = 10 \log_{10} \left(\frac{T_{max}}{T_{min}}\right) \text{ [dB]}\]</span></p>
+<p>Where <span class="math inline">\(T_{max}\)</span> and <span class="math inline">\(T_{min}\)</span> are maximum and minimum transmissions over all input polarization states.</p>
+<p><strong>System Impact:</strong></p>
+<ul>
+<li>Signal fading</li>
+<li>BER degradation</li>
+<li>Limits system performance</li>
+<li><strong>Target: PDL &lt; 0.5 dB</strong> for most applications</li>
+</ul>
+</section>
+<section id="polarization-diversity-multiplexing-pdm" class="slide level2 smaller">
+<h2>Polarization Diversity Multiplexing (PDM)</h2>
+<h3 id="concept">Concept</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Basic Idea:</strong></p>
+<ul>
+<li>Split both polarizations</li>
+<li>Process independently</li>
+<li>Recombine outputs</li>
+<li>Polarization-insensitive system</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Components needed:</strong></p>
+<ul>
+<li>Polarization splitter/rotator</li>
+<li>Dual processing paths</li>
+<li>Polarization combiner</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="m3_2DGC.png"></p>
+<figcaption>dual Polarization</figcaption>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="d-grating-couplers" class="slide level2 smaller">
+<h2>2D Grating Couplers</h2>
+<h3 id="two-dimensional-gratings-for-pdm">Two-Dimensional Gratings for PDM</h3>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li class="fragment">Couple both TE and TM from single fiber</li>
+<li class="fragment">Natural polarization splitting</li>
+<li class="fragment">Compact footprint</li>
+<li class="fragment">Enables true PDM operation</li>
+</ul>
+<p><strong>Structure:</strong></p>
+<ul>
+<li>2D periodic structure (grid pattern)</li>
+<li>Different periods for TE/TM</li>
+<li>Can include focusing elements</li>
+</ul>
+</section>
+<section id="d-gc-design" class="slide level2 smaller">
+<h2>2D GC Design</h2>
+<h3 id="design-considerations">Design Considerations</h3>
+<p><strong>Period selection:</strong></p>
+<p><span class="math display">\[\Lambda_x = \frac{\lambda}{n_{eff,TE} - n_{fiber}\sin(\theta_x)}\]</span></p>
+<p><span class="math display">\[\Lambda_y = \frac{\lambda}{n_{eff,TM} - n_{fiber}\sin(\theta_y)}\]</span></p>
+<p><strong>Challenges:</strong></p>
+<ul>
+<li>More complex fabrication</li>
+<li>Lower efficiency than 1D (typically -6 to -8 dB)</li>
+<li>Requires precise 2D patterning</li>
+<li>Larger footprint</li>
+</ul>
+</section>
+<section id="d-gc-performance" class="slide level2 smaller">
+<h2>2D GC Performance</h2>
+<h3 id="typical-characteristics">Typical Characteristics</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>TE port</th>
+<th>TM port</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Coupling loss</td>
+<td>-5 to -7 dB</td>
+<td>-5 to -7 dB</td>
+</tr>
+<tr class="even">
+<td>Crosstalk</td>
+<td>&lt; -15 dB</td>
+<td>&lt; -15 dB</td>
+</tr>
+<tr class="odd">
+<td>1-dB bandwidth</td>
+<td>~30 nm</td>
+<td>~30 nm</td>
+</tr>
+<tr class="even">
+<td>Footprint</td>
+<td>~30×30 μm²</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>PDM receivers</li>
+<li>Coherent systems</li>
+<li>Polarization-insensitive devices</li>
+</ul>
+</section>
+<section id="polarization-splitter-rotator-psr" class="slide level2">
+<h2>Polarization Splitter-Rotator (PSR)</h2>
+<h3 id="concept-and-operation">Concept and Operation</h3>
+<p><strong>Function:</strong></p>
+<ol type="1">
+<li><strong>Split</strong> TE and TM polarizations</li>
+<li><strong>Rotate</strong> TM to TE (or vice versa)</li>
+<li>Output both on TE-optimized waveguides</li>
+</ol>
+<p><strong>Key advantage:</strong> Process both polarizations with same circuitry</p>
+</section>
+<section id="psr-design-approaches" class="slide level2 smaller">
+<h2>PSR Design Approaches</h2>
+<h3 id="asymmetric-directional-coupler">1. Asymmetric Directional Coupler</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Principle:</strong></p>
+<ul>
+<li>Different coupling for TE/TM</li>
+<li>Based on mode asymmetry</li>
+<li>Integrated rotation section</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Performance:</strong></p>
+<ul>
+<li>Insertion loss: 0.5-1 dB</li>
+<li>Extinction ratio: &gt;15 dB</li>
+<li>Bandwidth: 50-80 nm</li>
+</ul>
+</div></div>
+<h3 id="mode-evolution-based">2. Mode Evolution Based</h3>
+<ul>
+<li>Adiabatic mode conversion</li>
+<li>Gradually varying structure</li>
+<li>Low loss, broad bandwidth</li>
+</ul>
+</section>
+<section id="psr-performance-metrics" class="slide level2">
+<h2>PSR Performance Metrics</h2>
+<h3 id="key-specifications">Key Specifications</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Typical Value</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Insertion loss</td>
+<td>0.5-1.5 dB</td>
+<td>&lt; 1 dB</td>
+</tr>
+<tr class="even">
+<td>Polarization extinction</td>
+<td>15-25 dB</td>
+<td>&gt; 20 dB</td>
+</tr>
+<tr class="odd">
+<td>Bandwidth (1-dB)</td>
+<td>60-100 nm</td>
+<td>&gt; 80 nm</td>
+</tr>
+<tr class="even">
+<td>Footprint</td>
+<td>50-150 μm</td>
+<td>Minimize</td>
+</tr>
+<tr class="odd">
+<td>Crosstalk</td>
+<td>&lt; -20 dB</td>
+<td>&lt; -25 dB</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="polarization-controllers-pc" class="slide level2 smaller">
+<h2>Polarization Controllers (PC)</h2>
+<h3 id="active-polarization-control">Active Polarization Control</h3>
+<p><strong>Need:</strong> Compensate for polarization drift in fibers</p>
+<p><strong>Approaches:</strong></p>
+<ol type="1">
+<li><strong>Thermo-optic PC</strong></li>
+</ol>
+<ul>
+<li>Heaters induce phase shift</li>
+<li>TE/TM differential phase</li>
+<li>Constructs arbitrary polarization</li>
+</ul>
+<ol start="2" type="1">
+<li><strong>Electro-optic PC</strong></li>
+</ol>
+<ul>
+<li>Voltage-controlled birefringence</li>
+<li>Faster response (MHz-GHz)</li>
+<li>Higher power consumption</li>
+</ul>
+</section>
+<section id="pc-implementation" class="slide level2 smaller">
+<h2>PC Implementation</h2>
+<h3 id="cascaded-phase-shifter-design">Cascaded Phase Shifter Design</h3>
+<p><strong>Configuration:</strong> Series of waveguide sections with controlled birefringence</p>
+<p><span class="math display">\[\Delta\phi_{TE-TM} = \frac{2\pi}{\lambda} \Delta n_{eff} L\]</span></p>
+<p><strong>Typical cascade:</strong></p>
+<ul>
+<li>3-4 sections at different orientations</li>
+<li>Each provides phase shift: 0-π</li>
+<li>Combined: complete Poincaré sphere coverage</li>
+</ul>
+</section>
+<section id="pc-performance" class="slide level2">
+<h2>PC Performance</h2>
+<h3 class="smaller" id="specifications-and-tradeoffs">Specifications and Tradeoffs</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Thermo-optic:</strong></p>
+<ul>
+<li>Power: 10-50 mW/<span class="math inline">\(\pi\)</span></li>
+<li>Speed: ms response</li>
+<li>Low insertion loss</li>
+<li>Compact design</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Electro-optic:</strong></p>
+<ul>
+<li>Power: mW level</li>
+<li>Speed: ns-<span class="math inline">\(\mu\)</span>s response</li>
+<li>Requires special materials</li>
+<li>More complex fabrication</li>
+</ul>
+</div></div>
+</section>
+<section id="wide-band-polarization-controller-for-si-photonic-integrated-circuits" class="slide level2">
+<h2>Wide-band polarization controller for Si photonic integrated circuits</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="m3_conceptPC.png" style="width:75.0%"></p>
+<figcaption>Concept</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="m3_PC2dgc.png" style="width:75.0%"></p>
+<figcaption>Realisation</figcaption>
+</figure>
+</div>
+<p>from: P. Velha, V. Sorianello, M. V. Preite, G. De Angelis, T. Cassese, A. Bianchi, F. Testa, and M. Romagnoli, “<strong>Wide-band polarization controller for Si photonic integrated circuits,</strong>” Opt. Lett. 41, 5656-5659 (2016)</p>
+</section>
+<section id="polarization-diversity-systems" class="slide level2">
+<h2>Polarization Diversity Systems</h2>
+<h3 id="complete-pdm-system-architecture">Complete PDM System Architecture</h3>
+<pre><code>Input Fiber → PSR → [TE path - Signal processing]
+                 ↓
+                 → [TM→TE path - Signal processing]
+                 ↓
+         Combiner → Output</code></pre>
+<p><strong>Key benefits:</strong></p>
+<ul>
+<li>Polarization-insensitive operation</li>
+<li>Maximizes signal utilization</li>
+<li>Essential for coherent systems</li>
+<li>Doubles spectral efficiency</li>
+</ul>
+</section>
+<section id="polarization-diversity-for-receivers" class="slide level2">
+<h2>Polarization Diversity for Receivers</h2>
+<h3 id="coherent-detection-application">Coherent Detection Application</h3>
+<p><strong>Structure:</strong></p>
+<ol type="1">
+<li>Input PSR splits signal</li>
+<li>Dual local oscillator (LO) paths</li>
+<li>Separate 90° hybrids for I/Q</li>
+<li>Balanced photodetectors</li>
+<li>DSP combines both polarizations</li>
+</ol>
+<p><strong>Advantage:</strong> Full polarization information captured</p>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="d.-optical-interfaces" class="title-slide slide level1 center">
+<h1>D. Optical Interfaces</h1>
+
+</section>
+<section id="overview-of-optical-interfaces" class="slide level2">
+<h2>Overview of Optical Interfaces</h2>
+<h3 id="coupling-methods">Coupling Methods</h3>
+<ol type="1">
+<li class="fragment"><strong>Fiber Arrays</strong> - Multiple fibers in precise alignment</li>
+<li class="fragment"><strong>Free-Space Coupling</strong> - Lens-based systems</li>
+<li class="fragment"><strong>Fiber Tapers</strong> - Mode-matched coupling</li>
+<li class="fragment"><strong>V-Groove Assembly</strong> - Passive alignment</li>
+<li class="fragment"><strong>Active Alignment</strong> - Optimized positioning</li>
+</ol>
+</section>
+<section id="fiber-arrays" class="slide level2 smaller">
+<h2>Fiber Arrays</h2>
+<h3 id="multi-fiber-connection-solution">Multi-Fiber Connection Solution</h3>
+<p><strong>Structure:</strong></p>
+<ul>
+<li>Multiple fibers (typically 4, 8, 12, or 24)</li>
+<li>Precise spacing (127 or 250 μm pitch)</li>
+<li>Held in V-groove array</li>
+<li>Polished end-face</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>High port-count PICs</li>
+<li>Transceivers and switches</li>
+<li>Parallel optics</li>
+<li>Dense WDM systems</li>
+</ul>
+</section>
+<section id="fiber-array-specifications" class="slide level2 smaller">
+<h2>Fiber Array Specifications</h2>
+<h3 id="key-parameters">Key Parameters</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Standard Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fiber pitch</td>
+<td>127 μm or 250 μm</td>
+</tr>
+<tr class="even">
+<td>Pitch accuracy</td>
+<td>±0.5 μm</td>
+</tr>
+<tr class="odd">
+<td>Height variation</td>
+<td>±0.25 μm</td>
+</tr>
+<tr class="even">
+<td>Angle tolerance</td>
+<td>±0.5°</td>
+</tr>
+<tr class="odd">
+<td>End-face quality</td>
+<td>&lt; 0.5 nm Ra</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Connector types:</strong></p>
+<ul>
+<li>MT ferrule (12/24 fiber)</li>
+<li>Custom arrays</li>
+<li>Ribbon fiber</li>
+</ul>
+</section>
+<section id="fiber-array-assembly" class="slide level2 smaller">
+<h2>Fiber Array Assembly</h2>
+<h3 id="assembly-process">Assembly Process</h3>
+<ol type="1">
+<li><strong>PIC preparation</strong>
+<ul>
+<li>Edge coupler array at standard pitch</li>
+<li>Cleaved/polished facet</li>
+<li>Anti-reflection coating (optional)</li>
+</ul></li>
+<li><strong>Passive alignment</strong>
+<ul>
+<li>V-groove substrate</li>
+<li>Precision fabricated alignment features</li>
+<li>UV-curable epoxy bonding</li>
+</ul></li>
+<li><strong>Active alignment</strong> (higher performance)
+<ul>
+<li>Optimize each fiber individually</li>
+<li>Monitor coupling during assembly</li>
+<li>Laser weld or epoxy fix</li>
+</ul></li>
+</ol>
+</section>
+<section id="pictures" class="slide level2">
+<h2>Pictures</h2>
+<p><img data-src="m3_faceFA.jpg" style="width:47.0%" alt="Face"> <img data-src="m3_PHIX3395-web.jpg" style="width:47.0%" alt="Picture of a Fiber Array"></p>
+</section>
+<section id="free-space-coupling" class="slide level2">
+<h2>Free-Space Coupling</h2>
+<h3 id="lens-based-optical-interfaces">Lens-Based Optical Interfaces</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Components:</strong></p>
+<ul>
+<li>Collimating lenses</li>
+<li>Focusing optics</li>
+<li>Beam shaping elements</li>
+<li>Anti-reflection coatings</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Chip-to-chip coupling</li>
+<li>Optical testing</li>
+<li>Flexible prototyping</li>
+<li>Non-contact probing</li>
+</ul>
+</div></div>
+</section>
+<section id="free-space-coupling-design" class="slide level2 smaller">
+<h2>Free-Space Coupling Design</h2>
+<h3 id="optical-system-design">Optical System Design</h3>
+<p><strong>Gaussian beam propagation:</strong></p>
+<p><span class="math display">\[w(z) = w_0 \sqrt{1 + \left(\frac{z}{z_R}\right)^2}\]</span></p>
+<p>Where:</p>
+<ul>
+<li><span class="math inline">\(w_0\)</span> = beam waist</li>
+<li><span class="math inline">\(z_R = \frac{\pi w_0^2}{\lambda}\)</span> = Rayleigh range</li>
+</ul>
+<p><strong>Design considerations:</strong></p>
+<ul>
+<li>Working distance</li>
+<li>Alignment tolerance</li>
+<li>Spot size matching</li>
+<li>Aberration control</li>
+</ul>
+</section>
+<section id="lensed-fiber" class="slide level2">
+<h2>Pictures</h2>
+</section>
+<section id="lensed-fiber-1" class="slide level2">
+<h2><img data-src="m3_LensedFiber.png" alt="Lensed fiber"></h2>
+</section>
+<section id="free-space-coupling-performance" class="slide level2 smaller">
+<h2>Free-Space Coupling Performance</h2>
+<h3 id="typical-specifications-1">Typical Specifications</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Coupling loss</td>
+<td>2-5 dB</td>
+<td>Without optimization</td>
+</tr>
+<tr class="even">
+<td>Working distance</td>
+<td>5-20 mm</td>
+<td>Depends on lens</td>
+</tr>
+<tr class="odd">
+<td>Alignment tolerance</td>
+<td>±5-20 μm</td>
+<td>For 1 dB penalty</td>
+</tr>
+<tr class="even">
+<td>Bandwidth</td>
+<td>&gt; 200 nm</td>
+<td>Achromatic optics</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>No physical contact</li>
+<li>Easy re-alignment</li>
+<li>Suitable for testing</li>
+</ul>
+</section>
+<section id="fiber-tapers" class="slide level2 smaller">
+<h2>Fiber Tapers</h2>
+<h3 id="lensed-and-tapered-fibers">Lensed and Tapered Fibers</h3>
+<p><strong>Types:</strong></p>
+<ol type="1">
+<li><strong>Lensed fibers</strong>
+<ul>
+<li>Curved end-face</li>
+<li>Reduced spot size (~3 μm)</li>
+<li>Shorter working distance</li>
+</ul></li>
+<li><strong>Tapered fibers</strong>
+<ul>
+<li>Pulled fiber tip</li>
+<li>Very small spot (&lt;2 μm)</li>
+<li>Fragile but efficient</li>
+</ul></li>
+</ol>
+</section>
+<section id="lensed-fiber-characteristics" class="slide level2 smaller">
+<h2>Lensed Fiber Characteristics</h2>
+<h3 id="design-and-performance">Design and Performance</h3>
+<p><strong>Key parameters:</strong></p>
+<ul>
+<li>Lens radius of curvature</li>
+<li>Working distance: 10-30 μm</li>
+<li>Spot size: 2.5-4 μm</li>
+<li>Numerical aperture: ~0.25</li>
+</ul>
+<p><strong>Coupling improvement:</strong></p>
+<ul>
+<li>Better mode matching to small waveguides</li>
+<li>Reduced coupling loss by 3-5 dB vs.&nbsp;standard fiber</li>
+<li>Suitable for edge coupling</li>
+</ul>
+</section>
+<section id="fiber-taper-fabrication" class="slide level2 smaller">
+<h2>Fiber Taper Fabrication</h2>
+<h3 id="manufacturing-methods">Manufacturing Methods</h3>
+<p><strong>Approaches:</strong></p>
+<ol type="1">
+<li><strong>Arc fusion</strong> - Local heating and pulling</li>
+<li><strong>Chemical etching</strong> - HF acid etching</li>
+<li><strong>Laser pulling</strong> - CO₂ laser heating</li>
+<li><strong>Mechanical grinding</strong> - Precision polishing</li>
+</ol>
+<p><strong>Challenges:</strong></p>
+<ul>
+<li>Maintaining concentricity</li>
+<li>Reproducibility</li>
+<li>Fragility of tip</li>
+<li>Cleanliness requirements</li>
+</ul>
+</section>
+<section id="v-groove-assembly" class="slide level2 smaller">
+<h2>V-Groove Assembly</h2>
+<h3 id="passive-alignment-technique">Passive Alignment Technique</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>V-Groove principle:</strong></p>
+<ul>
+<li>Silicon V-grooves (54.7° angle)</li>
+<li>Precise etch by KOH</li>
+<li>Self-centering fiber placement</li>
+<li>High accuracy (~0.5 μm)</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Alignment features:</strong></p>
+<ul>
+<li>Etched trenches on PIC</li>
+<li>Match fiber array pitch</li>
+<li>No active alignment needed</li>
+<li>Cost-effective assembly</li>
+</ul>
+</div></div>
+</section>
+<section id="v-groove-design" class="slide level2 smaller">
+<h2>V-Groove Design</h2>
+<h3 id="fabrication-and-integration">Fabrication and Integration</h3>
+<p><strong>Silicon V-groove fabrication:</strong></p>
+<p><span class="math display">\[\text{Groove depth} = \frac{w}{2\sqrt{2}} = \frac{125\,\mu m}{2\sqrt{2}} \approx 44\,\mu m\]</span></p>
+<p>For standard 125 μm diameter fiber.</p>
+<p><strong>PIC alignment marks:</strong></p>
+<ul>
+<li>Etched fiducials</li>
+<li>Reference to waveguide cores</li>
+<li>±1 μm accuracy achievable</li>
+</ul>
+</section>
+<section id="pictures-1" class="slide level2">
+<h2>Pictures</h2>
+
+<img data-src="m3_V-groove.png" class="r-stretch quarto-figure-center"><p class="caption">V-groove</p><p>from: A CMOS Compatible Monolithic Fiber Attach Solution with Reliable Performance and Self-alignment</p>
+</section>
+<section id="packaging-considerations" class="slide level2 smaller">
+<h2>Packaging Considerations</h2>
+<h3 id="hermetic-and-non-hermetic-packages">Hermetic and Non-Hermetic Packages</h3>
+<p><strong>Hermetic sealing:</strong></p>
+<ul>
+<li>Prevents moisture ingress</li>
+<li>Critical for reliability</li>
+<li>Metal or ceramic packages</li>
+<li>Seam or laser welding</li>
+</ul>
+<p><strong>Environmental protection:</strong></p>
+<ul>
+<li>Operating temperature: -40 to +85°C</li>
+<li>Storage: -40 to +100°C</li>
+<li>Humidity resistance</li>
+<li>Mechanical shock tolerance</li>
+</ul>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="e.-electrical-contacts" class="title-slide slide level1 center">
+<h1>E. Electrical Contacts</h1>
+
+</section>
+<section id="electrical-interconnection-overview" class="slide level2 smaller">
+<h2>Electrical Interconnection Overview</h2>
+<h3 id="need-for-electrical-io">Need for Electrical I/O</h3>
+<ul>
+<li class="fragment">DC bias for phase shifters</li>
+<li class="fragment">RF signals for modulators (&gt;40 GHz)</li>
+<li class="fragment">Thermo-optic heaters</li>
+<li class="fragment">Photodetector readout</li>
+<li class="fragment">Control and monitoring circuits</li>
+</ul>
+<p><strong>Three main technologies:</strong></p>
+<ol type="1">
+<li>Wire Bonding</li>
+<li>Micro-Bump (Flip-Chip)</li>
+<li>Through-Silicon Via (TSV)</li>
+</ol>
+</section>
+<section id="wire-bonding" class="slide level2 smaller">
+<h2>Wire Bonding</h2>
+<h3 id="traditional-interconnection-method">Traditional Interconnection Method</h3>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Process:</strong></p>
+<ul>
+<li>Ultrasonic or thermosonic</li>
+<li>Gold or aluminum wire</li>
+<li>25-75 μm diameter</li>
+<li>Ball or wedge bonding</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Mature technology</li>
+<li>Low cost</li>
+<li>Moderate frequency (&lt;10 GHz)</li>
+<li>Sequential process</li>
+</ul>
+</div></div>
+</section>
+<section id="process-flow-1" class="slide level2">
+<h2>Process Flow</h2>
+
+<img data-src="m3_wirebonding_technique.png" class="r-stretch quarto-figure-center"><p class="caption">Ball bonding process flow</p></section>
+<section id="wire-bonding-technical-details" class="slide level2 smaller">
+<h2>Wire Bonding: Technical Details</h2>
+<h3 id="bonding-parameters">Bonding Parameters</h3>
+<p><strong>Bond pad requirements:</strong></p>
+<ul>
+<li>Minimum size: 75×75 μm²</li>
+<li>Pad metal: Al, Au, or Cu</li>
+<li>Surface finish critical</li>
+<li>Passivation opening design</li>
+</ul>
+<p><strong>Wire loop:</strong></p>
+<ul>
+<li>Height: 150-300 μm</li>
+<li>Length: minimize for RF</li>
+<li>Inductance: ~1 nH/mm</li>
+<li>Resistance: ~50 mΩ/mm (25 μm Au)</li>
+</ul>
+</section>
+<section id="wire-bonding-performance" class="slide level2 smaller">
+<h2>Wire Bonding Performance</h2>
+<h3 id="electrical-characteristics">Electrical Characteristics</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DC resistance</td>
+<td>50-100 mΩ</td>
+</tr>
+<tr class="even">
+<td>Inductance</td>
+<td>0.5-2 nH</td>
+</tr>
+<tr class="odd">
+<td>Bandwidth (3-dB)</td>
+<td>~10 GHz</td>
+</tr>
+<tr class="even">
+<td>Capacitance</td>
+<td>~0.1 pF</td>
+</tr>
+<tr class="odd">
+<td>Reliability</td>
+<td>&gt; 10⁹ cycles</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Limitations for high-speed:</strong></p>
+<ul>
+<li>Parasitic inductance</li>
+<li>Impedance mismatch</li>
+<li>Not suitable for &gt;25 GHz RF</li>
+</ul>
+</section>
+<section id="wire-bonding-layout" class="slide level2 smaller">
+<h2>Wire Bonding Layout</h2>
+<h3 id="design-considerations-1">Design Considerations</h3>
+<p><strong>Best practices:</strong></p>
+<ol type="1">
+<li>Short wire lengths (&lt;1 mm for RF)</li>
+<li>Multiple parallel bonds for power</li>
+<li>Dedicated grounds near signals</li>
+<li>Avoid crossing wires</li>
+<li>Optimize bond pad placement</li>
+</ol>
+<p><strong>For RF applications:</strong></p>
+<ul>
+<li>Use multiple short bonds in parallel</li>
+<li>Ground-signal-ground (GSG) configuration</li>
+<li>Impedance-controlled transmission lines</li>
+</ul>
+</section>
+<section id="pictures-2" class="slide level2">
+<h2>Pictures</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="m3_Wire-bonding.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Diagam"><img data-src="m3_Wire-bonding.jpg" style="width:40.0%" alt="Diagam"></a></p>
+<figcaption>Diagam</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="m3_Wire-bonding-Pictures.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Picture of an actual chip"><img data-src="m3_Wire-bonding-Pictures.jpg" style="width:48.0%" alt="Picture of an actual chip"></a></p>
+<figcaption>Picture of an actual chip</figcaption>
+</figure>
+</div>
+</section>
+<section id="micro-bump-flip-chip" class="slide level2">
+<h2>Micro-Bump (Flip-Chip)</h2>
+<h3 id="advanced-interconnection-technology">Advanced Interconnection Technology</h3>
+<p><strong>Concept:</strong></p>
+<ul>
+<li>PIC flipped and bonded face-down</li>
+<li>Solder bumps provide connection</li>
+<li>Parallel assembly (all connections simultaneous)</li>
+<li>Very short electrical path</li>
+</ul>
+</section>
+<section id="picture" class="slide level2">
+<h2>picture</h2>
+
+<img data-src="m3_processes-10-02342-g011.png" class="r-stretch"></section>
+<section id="flip-chip-process" class="slide level2 smaller">
+<h2>Flip-Chip Process</h2>
+<h3 id="manufacturing-steps">Manufacturing Steps</h3>
+<ol type="1">
+<li><strong>Bump formation on PIC</strong>
+<ul>
+<li>Electroplating or solder paste</li>
+<li>Typical bump diameter: 50-100 μm</li>
+<li>Pitch: 100-200 μm</li>
+</ul></li>
+<li><strong>Substrate preparation</strong>
+<ul>
+<li>Matching pads on carrier/PCB</li>
+<li>Under-bump metallization (UBM)</li>
+<li>Solder paste or pre-formed bumps</li>
+</ul></li>
+<li><strong>Assembly</strong>
+<ul>
+<li>Alignment (±5 μm accuracy)</li>
+<li>Reflow soldering</li>
+<li>Underfill for reliability</li>
+</ul></li>
+</ol>
+</section>
+<section id="micro-bump-materials" class="slide level2 smaller">
+<h2>Micro-Bump Materials</h2>
+<h3 id="solder-bump-compositions">Solder Bump Compositions</h3>
+<p><strong>Common alloys:</strong></p>
+<ul>
+<li><strong>SnAg</strong> (96.5Sn/3.5Ag) - Lead-free, high reliability</li>
+<li><strong>SnPb</strong> (63Sn/37Pb) - Traditional eutectic</li>
+<li><strong>SnAgCu (SAC)</strong> - Lead-free alternative</li>
+<li><strong>AuSn</strong> (80Au/20Sn) - High temperature, hermetic</li>
+</ul>
+<p><strong>Under-Bump Metallization (UBM):</strong></p>
+<ul>
+<li>Ti/Ni/Au or Ti/Cu/Ni/Au</li>
+<li>Adhesion and wetting layers</li>
+<li>Diffusion barrier</li>
+</ul>
+</section>
+<section id="flip-chip-performance" class="slide level2 smaller">
+<h2>Flip-Chip Performance</h2>
+<h3 id="electrical-and-rf-characteristics">Electrical and RF Characteristics</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Inductance</td>
+<td>&lt; 100 pH</td>
+</tr>
+<tr class="even">
+<td>Capacitance</td>
+<td>10-50 fF</td>
+</tr>
+<tr class="odd">
+<td>Resistance</td>
+<td>&lt; 10 mΩ</td>
+</tr>
+<tr class="even">
+<td>Bandwidth</td>
+<td>&gt; 100 GHz</td>
+</tr>
+<tr class="odd">
+<td>Thermal resistance</td>
+<td>10-50 K/W</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Excellent high-frequency performance</li>
+<li>Short interconnect length</li>
+<li>High I/O density</li>
+<li>Good thermal path</li>
+</ul>
+</section>
+<section id="flip-chip-challenges" class="slide level2 smaller">
+<h2>Flip-Chip Challenges</h2>
+<h3 id="design-and-reliability-considerations">Design and Reliability Considerations</h3>
+<p><strong>Challenges:</strong></p>
+<ol type="1">
+<li class="fragment"><strong>CTE mismatch</strong> - Different expansion coefficients</li>
+<li class="fragment"><strong>Alignment accuracy</strong> - Requires ±5 μm or better</li>
+<li class="fragment"><strong>Underfill</strong> - Necessary for reliability but adds process</li>
+<li class="fragment"><strong>Rework</strong> - Difficult to repair</li>
+<li class="fragment"><strong>Cost</strong> - More expensive than wire bonding</li>
+</ol>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Compliant bumps</li>
+<li>Optimized underfill materials</li>
+<li>Precision placement equipment</li>
+</ul>
+</section>
+<section id="through-silicon-via-tsv" class="slide level2 smaller">
+<h2>Through-Silicon Via (TSV)</h2>
+<h3 id="d-interconnection-technology">3D Interconnection Technology</h3>
+<p><strong>Concept:</strong></p>
+<ul>
+<li>Vertical vias through silicon substrate</li>
+<li>Connect front-side to back-side</li>
+<li>Enable 3D integration</li>
+<li>Very short electrical path</li>
+</ul>
+<p><strong>Applications:</strong></p>
+<ul>
+<li>Backside illuminated detectors</li>
+<li>3D stacked chips</li>
+<li>High-density interposers</li>
+<li>CMOS-photonics co-integration</li>
+</ul>
+</section>
+<section id="tsv-structure-and-fabrication" class="slide level2 smaller">
+<h2>TSV Structure and Fabrication</h2>
+<h3 id="manufacturing-process">Manufacturing Process</h3>
+<div class="columns">
+<div class="column">
+<div style="font-size: 65%;">
+<ol type="1">
+<li><strong>Deep reactive ion etching (DRIE)</strong>
+<ul>
+<li>Aspect ratio: 5:1 to 20:1 and Diameter: 5-50 μm</li>
+<li>Depth: up to substrate thickness</li>
+</ul></li>
+<li><strong>Isolation layer</strong>
+<ul>
+<li>SiO₂ thermal oxidation or PECVD (Thickness: 0.5-2 μm)prevents leakage current</li>
+</ul></li>
+<li><strong>Barrier/seed layer</strong>
+<ul>
+<li>Ti/Cu or Ta/Cu through Sputtering or evaporation</li>
+</ul></li>
+<li><strong>Via filling</strong>
+<ul>
+<li>Electroplating (Cu) and Physical vapor deposition</li>
+<li>Avoid voids</li>
+</ul></li>
+<li><strong>CMP and metallization</strong>
+<ul>
+<li>Chemical-mechanical polish</li>
+<li>Top and bottom contacts</li>
+</ul></li>
+</ol>
+</div>
+</div><div class="column">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="m3_TSVflow.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="TSV process flow"><img data-src="m3_TSVflow.png" alt="TSV process flow"></a></p>
+<figcaption>TSV process flow</figcaption>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="pictures-3" class="slide level2">
+<h2>Pictures</h2>
+<p><a href="m3_processes-10-02342-g010.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img data-src="m3_processes-10-02342-g010.png" style="width:90.0%"></a></p>
+<p><a href="m3_processes-10-02342-g007.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img data-src="m3_processes-10-02342-g007.png" style="width:70.0%"></a></p>
+</section>
+<section id="tsv-design-parameters" class="slide level2 smaller">
+<h2>TSV Design Parameters</h2>
+<h3 id="key-specifications-1">Key Specifications</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Typical Range</th>
+<th>High-Performance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Via diameter</td>
+<td>10-50 μm</td>
+<td>5-10 μm</td>
+</tr>
+<tr class="even">
+<td>Via depth</td>
+<td>50-300 μm</td>
+<td>50-100 μm</td>
+</tr>
+<tr class="odd">
+<td>Aspect ratio</td>
+<td>5:1 to 10:1</td>
+<td>up to 20:1</td>
+</tr>
+<tr class="even">
+<td>Pitch</td>
+<td>40-100 μm</td>
+<td>20-40 μm</td>
+</tr>
+<tr class="odd">
+<td>Resistance</td>
+<td>10-100 mΩ</td>
+<td>&lt; 10 mΩ</td>
+</tr>
+<tr class="even">
+<td>Capacitance</td>
+<td>50-200 fF</td>
+<td>&lt; 50 fF</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tsv-electrical-performance" class="slide level2" style="font-size: 65%;">
+<h2>TSV Electrical Performance</h2>
+<h3 id="high-frequency-characteristics">High-Frequency Characteristics</h3>
+<p><strong>Parasitic elements:</strong></p>
+<p><span class="math inline">\(Z_{TSV} = R_{TSV} + j\omega L_{TSV} + \frac{1}{j\omega C_{TSV}}\)</span></p>
+<p><strong>Typical values:</strong></p>
+<ul>
+<li>Resistance: 20-50 mΩ (for 10 μm × 100 μm Cu via)</li>
+<li>Inductance: 10-50 pH</li>
+<li>Capacitance: 100-300 fF</li>
+<li>Bandwidth: &gt; 100 GHz</li>
+</ul>
+<p><strong>Advantages over wire bonds:</strong></p>
+<ul>
+<li>10× lower inductance</li>
+<li>Much higher bandwidth</li>
+<li>Better signal integrity</li>
+</ul>
+</section>
+<section id="tsv-reliability-issues" class="slide level2 smaller">
+<h2>TSV Reliability Issues</h2>
+<h3 id="challenges-and-solutions">Challenges and Solutions</h3>
+<p><strong>Main concerns:</strong></p>
+<ol type="1">
+<li><strong>Thermo-mechanical stress</strong>
+<ul>
+<li>CTE mismatch: Si (2.6 ppm/K) vs Cu (17 ppm/K)</li>
+<li>Can cause cracking or delamination</li>
+<li>Keep-out zones around TSV (10-20 μm)</li>
+</ul></li>
+<li><strong>Process-induced damage</strong>
+<ul>
+<li>DRIE can damage devices</li>
+<li>Careful process optimization needed</li>
+</ul></li>
+<li><strong>Isolation breakdown</strong>
+<ul>
+<li>Ensure adequate oxide thickness</li>
+<li>Monitor leakage current</li>
+</ul></li>
+</ol>
+</section>
+<section id="tsv-for-photonics" class="slide level2 smaller">
+<h2>TSV for Photonics</h2>
+<h3 id="specific-photonic-applications">Specific Photonic Applications</h3>
+<div style="font-size: 70%;">
+<p><strong>Backside detector contacts:</strong></p>
+<ul>
+<li>Illuminated detectors without front-side metal</li>
+<li>Improved optical performance</li>
+<li>Simplified routing</li>
+</ul>
+<p><strong>Co-packaged optics:</strong></p>
+<ul>
+<li>ASIC and PIC in 3D stack</li>
+<li>Minimize latency</li>
+<li>High-bandwidth electrical interface</li>
+</ul>
+<p><strong>Interposer technology:</strong></p>
+<ul>
+<li>Silicon photonics on interposer</li>
+<li>Multiple dies integrated</li>
+<li>Fan-out routing</li>
+</ul>
+</div>
+</section>
+<section id="comparison-wire-bond-vs-flip-chip-vs-tsv" class="slide level2 smaller">
+<h2>Comparison: Wire Bond vs Flip-Chip vs TSV</h2>
+<h3 id="technology-trade-offs">Technology Trade-offs</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Aspect</th>
+<th>Wire Bond</th>
+<th>Flip-Chip</th>
+<th>TSV</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Bandwidth</strong></td>
+<td>&lt; 10 GHz</td>
+<td>&gt; 100 GHz</td>
+<td>&gt; 100 GHz</td>
+</tr>
+<tr class="even">
+<td><strong>Inductance</strong></td>
+<td>1-2 nH</td>
+<td>&lt; 100 pH</td>
+<td>10-50 pH</td>
+</tr>
+<tr class="odd">
+<td><strong>I/O density</strong></td>
+<td>Low</td>
+<td>High</td>
+<td>Very High</td>
+</tr>
+<tr class="even">
+<td><strong>Cost</strong></td>
+<td>Low</td>
+<td>Medium</td>
+<td>High</td>
+</tr>
+<tr class="odd">
+<td><strong>Assembly</strong></td>
+<td>Sequential</td>
+<td>Parallel</td>
+<td>Embedded</td>
+</tr>
+<tr class="even">
+<td><strong>Rework</strong></td>
+<td>Easy</td>
+<td>Difficult</td>
+<td>Impossible</td>
+</tr>
+<tr class="odd">
+<td><strong>Maturity</strong></td>
+<td>Very High</td>
+<td>High</td>
+<td>Medium</td>
+</tr>
+<tr class="even">
+<td><strong>Thermal path</strong></td>
+<td>Poor</td>
+<td>Good</td>
+<td>Excellent</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="design-guidelines-for-electrical-contacts" class="slide level2" style="font-size: 65%;">
+<h2>Design Guidelines for Electrical Contacts</h2>
+<h3 id="general-best-practices">General Best Practices</h3>
+<p><strong>For DC and low-frequency (&lt;1 GHz):</strong></p>
+<ul>
+<li>Wire bonding is cost-effective</li>
+<li>Multiple bonds in parallel for current capacity</li>
+<li>Minimize wire length</li>
+</ul>
+<p><strong>For RF (1-40 GHz):</strong></p>
+<ul>
+<li>Flip-chip preferred for best performance</li>
+<li>Short wire bonds with GSG layout acceptable</li>
+<li>Careful impedance matching</li>
+</ul>
+<p><strong>For mmWave (&gt;40 GHz):</strong></p>
+<ul>
+<li>Flip-chip or TSV required</li>
+<li>Minimize parasitic capacitance</li>
+<li>Co-planar waveguide transitions</li>
+</ul>
+</section>
+<section id="rf-transmission-line-design" class="slide level2 smaller">
+<h2>RF Transmission Line Design</h2>
+<h3 id="on-chip-routing">On-Chip Routing</h3>
+<p><strong>Coplanar waveguide (CPW):</strong></p>
+<p><span class="math inline">\(Z_0 = \frac{30\pi}{\sqrt{\epsilon_{eff}}} \frac{K(k')}{K(k)}\)</span></p>
+<p>Where <span class="math inline">\(k = s/(s+2w)\)</span>, <span class="math inline">\(s\)</span> = gap, <span class="math inline">\(w\)</span> = signal width</p>
+<p><strong>Design targets:</strong></p>
+<ul>
+<li>50 Ω characteristic impedance</li>
+<li>Minimize loss (&lt;0.5 dB/mm at 40 GHz)</li>
+<li>Smooth transitions to bondpads/bumps</li>
+</ul>
+</section>
+<section id="substrate-crosstalk" class="slide level2 smaller">
+<h2>Substrate Crosstalk</h2>
+<h3 id="isolation-techniques">Isolation Techniques</h3>
+<p><strong>Problem:</strong> High-speed signals can couple through substrate</p>
+<p><strong>Solutions:</strong></p>
+<ol type="1">
+<li><strong>Ground shields</strong> - Surround signals with ground</li>
+<li><strong>Substrate contacts</strong> - Reduce substrate resistance</li>
+<li><strong>Guard rings</strong> - Isolate sensitive circuits</li>
+<li><strong>Proper spacing</strong> - Follow 3W rule (minimum)</li>
+<li><strong>Differential signaling</strong> - Common-mode rejection</li>
+</ol>
+</section>
+<section id="thermal-management" class="slide level2 smaller">
+<h2>Thermal Management</h2>
+<h3 id="heat-dissipation-considerations">Heat Dissipation Considerations</h3>
+<p><strong>Heat sources in PICs:</strong></p>
+<ul>
+<li>Thermo-optic heaters (10-50 mW each)</li>
+<li>High-speed modulators (100+ mW)</li>
+<li>Laser diodes (W-level)</li>
+<li>Photodetectors</li>
+</ul>
+<p><strong>Thermal interfaces:</strong></p>
+<ul>
+<li><strong>Wire bonds</strong>: Poor thermal path</li>
+<li><strong>Flip-chip</strong>: Good conduction to substrate</li>
+<li><strong>TSV</strong>: Excellent thermal via capability</li>
+<li>Heat sinks and active cooling for high power</li>
+</ul>
+</section>
+<section id="packaging-integration" class="slide level2 smaller">
+<h2>Packaging Integration</h2>
+<h3 id="complete-package-design">Complete Package Design</h3>
+<p><strong>Key elements:</strong></p>
+<ol type="1">
+<li><strong>Optical interface</strong> (fiber array or free-space)</li>
+<li><strong>Electrical interface</strong> (bond pads or bumps)</li>
+<li><strong>Thermal management</strong> (heat sink, TEC)</li>
+<li><strong>Mechanical support</strong> (rigid substrate)</li>
+<li><strong>Environmental protection</strong> (hermetic seal)</li>
+</ol>
+<p><strong>Design flow:</strong></p>
+<p>Optical → Electrical → Thermal → Mechanical → Reliability</p>
+</section>
+<section id="multi-chip-integration" class="slide level2 smaller">
+<h2>Multi-Chip Integration</h2>
+<h3 id="system-in-package-approach">System-in-Package Approach</h3>
+<p><strong>Concepts:</strong></p>
+<ul>
+<li>PIC + ASIC co-packaging</li>
+<li>Optical interposer</li>
+<li>2.5D and 3D integration</li>
+<li>Heterogeneous integration</li>
+</ul>
+<p><strong>Interconnection hierarchy:</strong></p>
+<ol type="1">
+<li><strong>On-chip</strong>: Metal layers in CMOS</li>
+<li><strong>Chip-to-chip</strong>: Wire bonds, flip-chip, TSV</li>
+<li><strong>Package-to-board</strong>: BGA, LGA, connectors</li>
+</ol>
+</section>
+<section id="electrical-measurement-and-testing" class="slide level2 smaller">
+<h2>Electrical Measurement and Testing</h2>
+<h3 id="contact-techniques-for-characterization">Contact Techniques for Characterization</h3>
+<p><strong>Probe testing:</strong></p>
+<ul>
+<li>RF probes (GSG configuration)</li>
+<li>DC probe cards</li>
+<li>Automated probe stations</li>
+<li>On-wafer testing before packaging</li>
+</ul>
+<p><strong>Packaged device testing:</strong></p>
+<ul>
+<li>PCB test fixtures</li>
+<li>High-frequency connectors</li>
+<li>Environmental chambers</li>
+<li>Reliability testing</li>
+</ul>
+</section>
+<section id="design-for-testability-dft" class="slide level2 smaller">
+<h2>Design for Testability (DFT)</h2>
+<h3 id="built-in-test-structures">Built-in Test Structures</h3>
+<p><strong>Include on PIC:</strong></p>
+<ol type="1">
+<li><strong>Test pads</strong> - Accessible contact points</li>
+<li><strong>Monitor photodetectors</strong> - Optical power</li>
+<li><strong>Heater test structures</strong> - Calibration</li>
+<li><strong>Electrical opens/shorts</strong> - Continuity</li>
+<li><strong>Reference devices</strong> - Process monitoring</li>
+</ol>
+<p><strong>Placement strategy:</strong></p>
+<ul>
+<li>Scribe line structures for process control</li>
+<li>In-device monitors for real-time feedback</li>
+<li>Accessible after packaging</li>
+</ul>
+</section>
+<section id="signal-integrity-considerations" class="slide level2 smaller">
+<h2>Signal Integrity Considerations</h2>
+<h3 id="high-speed-design-rules">High-Speed Design Rules</h3>
+<p><strong>Critical factors:</strong></p>
+<ol type="1">
+<li class="fragment"><strong>Impedance matching</strong> - 50 Ω throughout</li>
+<li class="fragment"><strong>Return path continuity</strong> - Ground plane integrity</li>
+<li class="fragment"><strong>Via inductance</strong> - Minimize number and length</li>
+<li class="fragment"><strong>Stub resonances</strong> - Avoid unterminated lines</li>
+<li class="fragment"><strong>Skew matching</strong> - For differential pairs</li>
+</ol>
+<p><strong>Simulation tools:</strong></p>
+<ul>
+<li>HFSS, CST for 3D EM</li>
+<li>ADS, Spectre for circuit</li>
+<li>Time-domain reflectometry (TDR)</li>
+</ul>
+</section>
+<section id="case-study-high-speed-modulator-driver" class="slide level2 smaller">
+<h2>Case Study: High-Speed Modulator Driver</h2>
+<h3 id="ghz-modulator-interface">50 GHz Modulator Interface</h3>
+<div style="font-size: 65%;">
+<p><strong>Requirements:</strong></p>
+<ul>
+<li>Modulation bandwidth: 50 GHz</li>
+<li>Drive voltage: 2-4 Vpp</li>
+<li>Impedance: 50 Ω</li>
+<li>Return loss: &lt; -10 dB</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<ul>
+<li>Flip-chip assembly for low parasitics</li>
+<li>GSG flip-chip bumps (80 μm pitch)</li>
+<li>On-chip 50 Ω termination</li>
+<li>RF-optimized electrode design</li>
+</ul>
+</div>
+</section>
+<section id="case-study-dense-io-transceiver" class="slide level2 smaller">
+<h2>Case Study: Dense I/O Transceiver</h2>
+<h3 id="channel-100g-transceiver">8-Channel 100G Transceiver</h3>
+<p><strong>Specifications:</strong></p>
+<ul>
+<li>8 optical channels</li>
+<li>8 bias controls</li>
+<li>16 RF modulator drives</li>
+<li>8 TIA outputs</li>
+<li>Temperature sensors and heaters</li>
+</ul>
+<p><strong>Solution:</strong></p>
+<ul>
+<li>Fiber array for optical (250 μm pitch)</li>
+<li>Flip-chip for RF signals (100 μm pitch bumps)</li>
+<li>Wire bonds for DC bias and control</li>
+<li>TSV for backside photodetector contacts</li>
+</ul>
+</section>
+<section id="assembly-yield-and-reliability" class="slide level2" style="font-size: 65%;">
+<h2>Assembly Yield and Reliability</h2>
+<h3 id="ensuring-high-manufacturing-yield">Ensuring High Manufacturing Yield</h3>
+<p><strong>Yield loss mechanisms:</strong></p>
+<ol type="1">
+<li><strong>Alignment errors</strong> - Active alignment critical</li>
+<li><strong>Contamination</strong> - Clean room procedures</li>
+<li><strong>Bond failures</strong> - Process control</li>
+<li><strong>Optical damage</strong> - Handling procedures</li>
+</ol>
+<p><strong>Reliability testing:</strong></p>
+<ul>
+<li>Temperature cycling (-40 to +85°C)</li>
+<li>Humidity testing (85°C/85% RH)</li>
+<li>Mechanical shock and vibration</li>
+<li>Long-term aging (1000+ hours)</li>
+<li>Target: &lt; 100 FIT</li>
+</ul>
+</section>
+<section id="cost-considerations" class="slide level2" style="font-size: 65%;">
+<h2>Cost Considerations</h2>
+<h3 id="economic-analysis">Economic Analysis</h3>
+<p><strong>Cost drivers:</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Assembly Method</th>
+<th>Relative Cost</th>
+<th>Volume Suitability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Wire bonding</td>
+<td>1× (baseline)</td>
+<td>small volume OK</td>
+</tr>
+<tr class="even">
+<td>Flip-chip</td>
+<td>2-3×</td>
+<td>Medium-high volume</td>
+</tr>
+<tr class="odd">
+<td>TSV</td>
+<td>3-5×</td>
+<td>Very high volume, high-end</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Cost reduction strategies:</strong></p>
+<ul>
+<li>Passive alignment</li>
+<li>Standard fiber arrays</li>
+<li>Minimize active alignment</li>
+<li>Design for manufacturability</li>
+</ul>
+</section>
+<section id="emerging-technologies" class="slide level2" style="font-size: 65%;">
+<h2>Emerging Technologies</h2>
+<h3 id="future-trends">Future Trends</h3>
+<p><strong>Advanced packaging:</strong></p>
+<ul>
+<li class="fragment"><strong>Chiplet integration</strong> - Mix and match dies</li>
+<li class="fragment"><strong>Photonic wire bonds</strong> - Optical interconnects</li>
+<li class="fragment"><strong>Wafer-level packaging</strong> - Collective assembly</li>
+<li class="fragment"><strong>Silicon bridge technology</strong> - Ultra-high density</li>
+<li class="fragment"><strong>Co-packaged optics</strong> - Optics on ASIC package</li>
+</ul>
+<p><strong>2026+ outlook:</strong></p>
+<ul>
+<li>Higher density (&gt;500 I/O per cm²)</li>
+<li>Higher bandwidth (&gt;200 GHz RF)</li>
+<li>Lower cost (&lt;$5 per port)</li>
+</ul>
+</section>
+<section id="standards-and-guidelines" class="slide level2" style="font-size: 65%;">
+<h2>Standards and Guidelines</h2>
+<h3 id="industry-standards">Industry Standards</h3>
+<p><strong>Relevant standards:</strong></p>
+<ul>
+<li><strong>IEC 61755</strong>: Fiber optic connector interfaces</li>
+<li><strong>IEC 61300</strong>: Fiber optic interconnecting devices</li>
+<li><strong>Telcordia GR-468</strong>: Generic reliability requirements</li>
+<li><strong>IEEE 802.3</strong>: Ethernet optical interfaces</li>
+<li><strong>OIF</strong>: Optical Internetworking Forum specs</li>
+</ul>
+<p><strong>Design compliance:</strong></p>
+<ul>
+<li>Follow industry-accepted practices</li>
+<li>Consider interoperability</li>
+<li>Document deviations</li>
+</ul>
+</section>
+<section id="practical-design-example" class="slide level2" style="font-size: 65%;">
+<h2>Practical Design Example</h2>
+<h3 id="complete-pdm-coherent-receiver">Complete PDM Coherent Receiver</h3>
+<p><strong>Optical interfaces:</strong></p>
+<ul>
+<li>Input: 2D grating coupler (signal + LO)</li>
+<li>Monitor: Grating couplers for taps</li>
+</ul>
+<p><strong>Polarization management:</strong></p>
+<ul>
+<li>On-chip PSR</li>
+<li>Dual 90° hybrid mixers</li>
+<li>8 balanced photodetectors</li>
+</ul>
+<p><strong>Electrical interfaces:</strong></p>
+<ul>
+<li>8 TSV connections for PD cathodes</li>
+<li>Flip-chip bumps for TIA connections (8 channels)</li>
+<li>Wire bonds for DC bias (heaters, phase shifters)</li>
+</ul>
+</section>
+<section id="design-checklist" class="slide level2" style="font-size: 65%;">
+<h2>Design Checklist</h2>
+<h3 id="pre-fabrication-review">Pre-Fabrication Review</h3>
+<p><strong>Optical I/O:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox">Grating coupler/edge coupler design verified</label></li>
+<li><label><input type="checkbox">Polarization management included if needed</label></li>
+<li><label><input type="checkbox">Fiber array pitch matches standard</label></li>
+<li><label><input type="checkbox">Anti-reflection coatings specified</label></li>
+</ul>
+<p><strong>Electrical I/O:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox">Bond pad sizes meet process rules</label></li>
+<li><label><input type="checkbox">RF routing impedance-controlled</label></li>
+<li><label><input type="checkbox">Adequate ground connections</label></li>
+<li><label><input type="checkbox">TSV keep-out zones respected</label></li>
+<li><label><input type="checkbox">ESD protection included</label></li>
+</ul>
+</section>
+<section id="design-checklist-continued" class="slide level2" style="font-size: 65%;">
+<h2>Design Checklist (continued)</h2>
+<h3 id="pre-fabrication-review-1">Pre-Fabrication Review</h3>
+<p><strong>Assembly considerations:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox">Alignment marks present and accurate</label></li>
+<li><label><input type="checkbox">Edge clearance for cleaving/dicing</label></li>
+<li><label><input type="checkbox">Underfill considerations for flip-chip</label></li>
+<li><label><input type="checkbox">Thermal management plan defined</label></li>
+<li><label><input type="checkbox">Test structures included</label></li>
+</ul>
+<p><strong>Documentation:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox">Packaging assembly drawing</label></li>
+<li><label><input type="checkbox">Bill of materials (BOM)</label></li>
+<li><label><input type="checkbox">Assembly process flow</label></li>
+<li><label><input type="checkbox">Test procedures defined</label></li>
+</ul>
+</section>
+<section id="simulation-and-modeling" class="slide level2" style="font-size: 65%;">
+<h2>Simulation and Modeling</h2>
+<h3 id="design-verification-tools">Design Verification Tools</h3>
+<p><strong>Optical simulation:</strong></p>
+<ul>
+<li><strong>FDTD</strong>: Lumerical, Ansys - Grating couplers</li>
+<li><strong>EME</strong>: Mode propagation - Edge couplers</li>
+<li><strong>BPM</strong>: Beam propagation - Waveguide transitions</li>
+</ul>
+<p><strong>Electrical simulation:</strong></p>
+<ul>
+<li><strong>HFSS/CST</strong>: 3D EM - RF structures, bumps</li>
+<li><strong>Cadence</strong>: Circuit simulation - Impedance matching</li>
+<li><strong>SPICE</strong>: DC and transient - Bias networks</li>
+</ul>
+<p><strong>Thermal simulation:</strong></p>
+<ul>
+<li><strong>COMSOL</strong>: Multi-physics - Heat distribution</li>
+<li><strong>Ansys Icepak</strong>: Thermal - Package-level</li>
+</ul>
+</section>
+<section id="laboratory-characterization" class="slide level2" style="font-size: 65%;">
+<h2>Laboratory Characterization</h2>
+<h3 id="measurement-techniques">Measurement Techniques</h3>
+<p><strong>Optical measurements:</strong></p>
+<ul>
+<li>Insertion loss vs.&nbsp;wavelength</li>
+<li>Polarization-dependent loss (PDL)</li>
+<li>Return loss</li>
+<li>Optical bandwidth</li>
+<li>Coupling efficiency</li>
+</ul>
+<p><strong>Electrical measurements:</strong></p>
+<ul>
+<li>S-parameters (RF performance)</li>
+<li>Eye diagrams (signal integrity)</li>
+<li>Bit error rate (BER)</li>
+<li>Power consumption</li>
+<li>Thermal resistance</li>
+</ul>
+</section>
+<section id="troubleshooting-common-issues" class="slide level2" style="font-size: 65%;">
+<h2>Troubleshooting Common Issues</h2>
+<h3 id="optical-io-problems">Optical I/O Problems</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Symptom</th>
+<th>Possible Cause</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>High loss</td>
+<td>Misalignment</td>
+<td>Re-optimize alignment</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Mode mismatch</td>
+<td>Redesign taper/GC</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Surface quality</td>
+<td>Improve cleaving/polishing</td>
+</tr>
+<tr class="even">
+<td>High PDL</td>
+<td>Polarization mixing</td>
+<td>Check PSR, add PC</td>
+</tr>
+<tr class="odd">
+<td>Poor bandwidth</td>
+<td>GC design</td>
+<td>Optimize apodization</td>
+</tr>
+<tr class="even">
+<td>Back-reflection</td>
+<td>Facet reflections</td>
+<td>AR coating, angle</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="troubleshooting-common-issues-continued" class="slide level2" style="font-size: 65%;">
+<h2>Troubleshooting Common Issues (continued)</h2>
+<h3 id="electrical-io-problems">Electrical I/O Problems</h3>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Symptom</th>
+<th>Possible Cause</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>High RF loss</td>
+<td>Bond inductance</td>
+<td>Use flip-chip</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Impedance mismatch</td>
+<td>Redesign transmission lines</td>
+</tr>
+<tr class="odd">
+<td>Poor eye opening</td>
+<td>Signal integrity issues</td>
+<td>Check return path, vias</td>
+</tr>
+<tr class="even">
+<td>Crosstalk</td>
+<td>Insufficient isolation</td>
+<td>Add shielding, increase spacing</td>
+</tr>
+<tr class="odd">
+<td>ESD damage</td>
+<td>No protection</td>
+<td>Add ESD structures</td>
+</tr>
+<tr class="even">
+<td>Thermal runaway</td>
+<td>Poor heat sinking</td>
+<td>Improve thermal interface</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-summary" class="slide level2" style="font-size: 80%;">
+<h2>Module Summary</h2>
+<h3 id="key-takeaways">Key Takeaways</h3>
+<ol type="1">
+<li class="fragment"><strong>Grating couplers</strong> enable wafer-scale testing but have limited bandwidth</li>
+<li class="fragment"><strong>Edge couplers</strong> provide broadband, low-loss coupling for production</li>
+<li class="fragment"><strong>Polarization management</strong> is critical for system performance</li>
+<li class="fragment"><strong>Fiber arrays</strong> enable high-density optical I/O</li>
+<li class="fragment"><strong>Flip-chip and TSV</strong> are essential for high-speed electrical interfaces</li>
+</ol>
+</section>
+<section id="module-summary-continued" class="slide level2" style="font-size: 65%;">
+<h2>Module Summary (continued)</h2>
+<h3 id="design-principles">Design Principles</h3>
+<p><strong>Optical coupling:</strong></p>
+<ul>
+<li>Match mode sizes for efficient coupling</li>
+<li>Consider bandwidth requirements</li>
+<li>Plan for polarization diversity</li>
+<li>Enable testability</li>
+</ul>
+<p><strong>Electrical connections:</strong></p>
+<ul>
+<li>Choose technology based on frequency</li>
+<li>Minimize parasitic elements</li>
+<li>Ensure signal integrity</li>
+<li>Plan thermal management</li>
+</ul>
+</section>
+<section id="further-reading" class="slide level2" style="font-size: 65%;">
+<h2>Further Reading</h2>
+<h3 id="recommended-resources">Recommended Resources</h3>
+<p><strong>Books:</strong></p>
+<ul>
+<li>“Silicon Photonics Design” - Chrostowski &amp; Hochberg (Reference book)</li>
+<li>“Optical Fiber Communications” - Agrawal</li>
+<li>“Microwave Engineering” - Pozar</li>
+</ul>
+<p><strong>Papers:</strong></p>
+<ul>
+<li>Nature Photonics - Recent PDM and coupling work</li>
+<li>IEEE/OSA JLT - Photonic integration</li>
+<li>IEEE T-CPMT - Packaging technologies</li>
+</ul>
+<p><strong>Online:</strong></p>
+<ul>
+<li>OptoElectronic Research Centre resources</li>
+<li>Lumerical Knowledge Base</li>
+<li>AIM Photonics Academy</li>
+</ul>
+</section>
+<section id="design-project-4-channel-transceiver" class="slide level2" style="font-size: 65%;">
+<h2>Design Project: 4-Channel Transceiver</h2>
+<p><strong>Assignment:</strong></p>
+<p>Design the complete optical and electrical I/O for a 4-channel, 100 Gbps transceiver:</p>
+<p><strong>Requirements:</strong></p>
+<ul>
+<li>4 optical inputs (O-band, 1310 nm)</li>
+<li>4 optical outputs</li>
+<li>Polarization diversity on each channel</li>
+<li>High-speed modulation (25 GHz per channel)</li>
+<li>Include all bias and control connections</li>
+</ul>
+<p><strong>Deliverables:</strong></p>
+<ol type="1">
+<li>Grating coupler or edge coupler design</li>
+<li>Electrical interface layout (specify wire bond/flip-chip)</li>
+<li>Thermal management plan</li>
+<li>Assembly process flow</li>
+</ol>
+</section>
+<section id="questions" class="slide level2">
+<h2>Questions?</h2>
+<h3 id="discussion-topics">Discussion Topics</h3>
+<ul>
+<li class="fragment">Which coupling approach is best for your application?</li>
+<li class="fragment">How to balance performance, cost, and complexity?</li>
+<li class="fragment">What are the yield and reliability implications?</li>
+<li class="fragment">How does packaging affect system design?</li>
+</ul>
+<p><strong>Next Module:</strong> We’ll explore active photonic devices including modulators, phase shifters, and switches.</p>
+</section>
+<section id="appendix-a-design-parameters" class="slide level2">
+<h2>Appendix A: Design Parameters</h2>
+<h3 id="quick-reference-tables">Quick Reference Tables</h3>
+<p><strong>Standard Fiber Parameters:</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>SMF-28</th>
+<th>Hi-NA Fiber</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Core diameter</td>
+<td>8.2 μm</td>
+<td>4-5 μm</td>
+</tr>
+<tr class="even">
+<td>MFD @ 1550 nm</td>
+<td>10.4 μm</td>
+<td>6-7 μm</td>
+</tr>
+<tr class="odd">
+<td>NA</td>
+<td>0.14</td>
+<td>0.20-0.25</td>
+</tr>
+<tr class="even">
+<td>Cladding</td>
+<td>125 μm</td>
+<td>80-125 μm</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="appendix-b-material-properties" class="slide level2" style="font-size: 65%;">
+<h2>Appendix B: Material Properties</h2>
+<h3 id="optical-and-electrical-constants">Optical and Electrical Constants</h3>
+<p><strong>Refractive indices (@ 1550 nm):</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Material</th>
+<th>n</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Silicon</td>
+<td>3.48</td>
+<td>Strong confinement</td>
+</tr>
+<tr class="even">
+<td>SiO₂</td>
+<td>1.444</td>
+<td>Cladding</td>
+</tr>
+<tr class="odd">
+<td>Si₃N₄</td>
+<td>2.0</td>
+<td>Medium index</td>
+</tr>
+<tr class="even">
+<td>Polymer</td>
+<td>1.45-1.55</td>
+<td>Variable</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Thermal properties:</strong></p>
+<ul>
+<li>Si CTE: 2.6 ppm/K</li>
+<li>SiO₂ CTE: 0.5 ppm/K</li>
+<li>Cu CTE: 17 ppm/K</li>
+</ul>
+</section>
+<section id="appendix-c-fabrication-tolerances" class="slide level2" style="font-size: 65%;">
+<h2>Appendix C: Fabrication Tolerances</h2>
+<h3 id="typical-process-variations">Typical Process Variations</h3>
+<p><strong>Lithography:</strong></p>
+<ul>
+<li>CD variation: ±10 nm (±5 nm for advanced)</li>
+<li>Overlay accuracy: ±30 nm</li>
+</ul>
+<p><strong>Etching:</strong></p>
+<ul>
+<li>Depth control: ±5-10 nm</li>
+<li>Sidewall angle: ±2°</li>
+</ul>
+<p><strong>These variations impact:</strong></p>
+<ul>
+<li>Grating coupler wavelength (±5 nm)</li>
+<li>Edge coupler efficiency (±0.5 dB)</li>
+<li>Waveguide effective index</li>
+</ul>
+</section>
+<section id="thank-you" class="slide level2">
+<h2>Thank You!</h2>
+<h3 id="contact-information">Contact Information</h3>
+<p><strong>Instructor:</strong> [Philippe Velha]<br>
+<strong>Email:</strong> [philippe.velha@unitn.it]<br>
+<strong>Office Hours:</strong> [contact me]</p>
+<p><strong>Course Website:</strong> [https://didatticaonline.unitn.it/dol/course/view.php?id=41724]</p>
+<p><strong>Next Class:</strong> Module 4 - Active Photonic Devices</p>
+<h3 id="good-luck-with-your-designs">Good luck with your designs!</h3>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<p><img src="epic.png" class="slide-logo"></p>
+<div class="footer footer-default">
+<p>Module 3: Optical and Electrical I/O</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="module3_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="module3_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="module3_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="module3_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="module3_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="module3_files/libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="module3_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="module3_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="module3_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="module3_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="module3_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'h.v',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'grid',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'zoom',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'fade',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+    (function() {
+      let previousOnload = window.onload;
+      window.onload = () => {
+        if (previousOnload) {
+          previousOnload();
+        }
+        lightboxQuarto.on('slide_before_load', (data) => {
+          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+          const href = trigger.getAttribute('href');
+          if (href !== null) {
+            const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+            if (imgEl !== null) {
+              const srcAttr = imgEl.getAttribute("src");
+              if (srcAttr && srcAttr.startsWith("data:")) {
+                slideConfig.href = srcAttr;
+              }
+            }
+          } 
+        });
+      
+        lightboxQuarto.on('slide_after_load', (data) => {
+          const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(slideNode);
+          }
+        });
+      
+      };
+      
+    })();
+              </script>
+    
+
+</body></html>

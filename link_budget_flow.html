@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Budget Flow Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .equations {
+            background: #f8fafc;
+            padding: 25px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .equation-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3b82f6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .equation-box h3 {
+            color: #1e3a8a;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .equation {
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            color: #334155;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .flow-diagram {
+            padding: 40px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f8fafc 100%);
+        }
+        
+        .signal-path {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .component {
+            flex: 1;
+            max-width: 280px;
+            position: relative;
+        }
+        
+        .component-box {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 3px solid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .component-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        
+        .modulator-box { border-color: #ef4444; }
+        .optical-box { border-color: #f59e0b; }
+        .detector-box { border-color: #10b981; }
+        
+        .component-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .modulator-box .component-title { color: #ef4444; }
+        .optical-box .component-title { color: #f59e0b; }
+        .detector-box .component-title { color: #10b981; }
+        
+        .component-specs {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+        
+        .spec-row:last-child {
+            border-bottom: none;
+        }
+        
+        .spec-label {
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        .spec-value {
+            color: #1e293b;
+            font-weight: 700;
+        }
+        
+        .arrow {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            position: relative;
+            margin: 0 10px;
+        }
+        
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid #2563eb;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+        
+        .signal-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #3b82f6;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .input-output {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 140px;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+        
+        .io-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .io-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .budget-summary {
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            padding: 30px;
+            margin-top: 40px;
+            border-radius: 12px;
+        }
+        
+        .budget-summary h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .summary-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .summary-card h4 {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        
+        .summary-card .value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .optimization {
+            background: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        
+        .optimization h3 {
+            color: #065f46;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .optimization ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .optimization li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #047857;
+            font-weight: 500;
+        }
+        
+        .optimization li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+        
+        .legend-box {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>RF Photonic Link Budget Analysis</h1>
+            <div class="subtitle">Power and Noise Flow Through System Components</div>
+        </div>
+        
+        <div class="equations">
+            <div class="equation-box">
+                <h3>Power Budget</h3>
+                <div class="equation">P<sub>RF,out</sub> = P<sub>RF,in</sub> + G<sub>mod</sub> + G<sub>opt</sub> + G<sub>det</sub> - L<sub>opt</sub></div>
+            </div>
+            <div class="equation-box">
+                <h3>Noise Budget</h3>
+                <div class="equation">N<sub>out</sub> = N<sub>in</sub> + NF<sub>mod</sub> + NF<sub>opt</sub> + NF<sub>det</sub></div>
+            </div>
+        </div>
+        
+        <div class="flow-diagram">
+            <div class="signal-path">
+                <div class="input-output">
+                    <div class="io-label">RF INPUT</div>
+                    <div class="io-value">P<sub>in</sub></div>
+                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.8;">0 dB ref</div>
+                </div>
+                
+                <div class="arrow">
+                    <div class="signal-label">RF Signal</div>
+                </div>
+                
+                <div class="component">
+                    <div class="component-box modulator-box">
+                        <div class="component-title">MODULATOR</div>
+                        <svg width="100%" height="80" viewBox="0 0 200 80">
+                            <rect x="20" y="20" width="160" height="40" fill="none" stroke="#ef4444" stroke-width="3" rx="5"/>
+                            <line x1="20" y1="40" x2="0" y2="40" stroke="#3b82f6" stroke-width="3"/>
+                            <line x1="180" y1="40" x2="200" y2="40" stroke="#f59e0b" stroke-width="3"/>
+                            <path d="M 60 30 L 70 50 L 80 30 L 90 50 L 100 30 L 110 50 L 120 30 L 130 50 L 140 30" 
+                                  fill="none" stroke="#ef4444" stroke-width="2"/>
+                            <text x="100" y="60" text-anchor="middle" font-size="10" fill="#ef4444" font-weight="bold">E/O</text>
+                        </svg>
+                        <div class="component-specs">
+                            <div class="spec-row">
+                                <span class="spec-label">Gain:</span>
+                                <span class="spec-value">-6 dB</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Noise Figure:</span>
+                                <span class="spec-value">6 dB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="arrow">
+                    <div class="signal-label">Optical Signal</div>
+                </div>
+                
+                <div class="component">
+                    <div class="component-box optical-box">
+                        <div class="component-title">OPTICAL PATH</div>
+                        <svg width="100%" height="80" viewBox="0 0 200 80">
+                            <path d="M 10 40 L 50 40 L 60 30 L 70 50 L 80 30 L 90 50 L 100 30 L 110 50 L 120 30 L 130 40 L 190 40" 
+                                  fill="none" stroke="#f59e0b" stroke-width="3"/>
+                            <circle cx="50" cy="40" r="8" fill="none" stroke="#f59e0b" stroke-width="2"/>
+                            <circle cx="130" cy="40" r="8" fill="none" stroke="#f59e0b" stroke-width="2"/>
+                            <text x="100" y="70" text-anchor="middle" font-size="10" fill="#f59e0b" font-weight="bold">Fiber/Waveguide</text>
+                        </svg>
+                        <div class="component-specs">
+                            <div class="spec-row">
+                                <span class="spec-label">Loss:</span>
+                                <span class="spec-value">-3 dB</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Passive:</span>
+                                <span class="spec-value">No NF add</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="arrow">
+                    <div class="signal-label">Optical Signal</div>
+                </div>
+                
+                <div class="component">
+                    <div class="component-box detector-box">
+                        <div class="component-title">PHOTODETECTOR</div>
+                        <svg width="100%" height="80" viewBox="0 0 200 80">
+                            <polygon points="50,20 50,60 130,40" fill="none" stroke="#10b981" stroke-width="3"/>
+                            <line x1="130" y1="40" x2="150" y2="40" stroke="#3b82f6" stroke-width="3"/>
+                            <line x1="20" y1="40" x2="50" y2="40" stroke="#f59e0b" stroke-width="3"/>
+                            <circle cx="150" cy="40" r="5" fill="#10b981"/>
+                            <text x="100" y="75" text-anchor="middle" font-size="10" fill="#10b981" font-weight="bold">O/E + Amp</text>
+                        </svg>
+                        <div class="component-specs">
+                            <div class="spec-row">
+                                <span class="spec-label">Gain:</span>
+                                <span class="spec-value">+10 dB</span>
+                            </div>
+                            <div class="spec-row">
+                                <span class="spec-label">Noise Figure:</span>
+                                <span class="spec-value">15 dB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="arrow">
+                    <div class="signal-label">RF Signal</div>
+                </div>
+                
+                <div class="input-output">
+                    <div class="io-label">RF OUTPUT</div>
+                    <div class="io-value">P<sub>out</sub></div>
+                    <div style="font-size: 12px; margin-top: 5px; opacity: 0.8;">+1 dB</div>
+                </div>
+            </div>
+            
+            <div class="budget-summary">
+                <h3>📊 Link Performance Summary</h3>
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <h4>Total Gain</h4>
+                        <div class="value">+1 dB</div>
+                        <div style="font-size: 12px; margin-top: 8px; opacity: 0.8;">
+                            -6 dB + (-3 dB) + 10 dB = +1 dB
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Total Noise Figure</h4>
+                        <div class="value">~21 dB</div>
+                        <div style="font-size: 12px; margin-top: 8px; opacity: 0.8;">
+                            6 dB + 0 dB + 15 dB ≈ 21 dB
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Dynamic Range</h4>
+                        <div class="value">~100 dB·Hz<sup>2/3</sup></div>
+                        <div style="font-size: 12px; margin-top: 8px; opacity: 0.8;">
+                            SFDR calculation
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="optimization">
+                <h3>🎯 Design Optimization Guidelines</h3>
+                <ul>
+                    <li>Maximize optical power (limit RIN - Relative Intensity Noise)</li>
+                    <li>Minimize optical losses through component selection</li>
+                    <li>Match impedances at RF input/output ports</li>
+                    <li>Optimize modulation depth for linearity vs. efficiency</li>
+                </ul>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box" style="border-color: #ef4444; background: rgba(239, 68, 68, 0.1);"></div>
+                    <span>Electro-Optic Modulator</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="border-color: #f59e0b; background: rgba(245, 158, 11, 0.1);"></div>
+                    <span>Optical Path (Passive)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="border-color: #10b981; background: rgba(16, 185, 129, 0.1);"></div>
+                    <span>Photodetector + TIA</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ring Resonator Datasheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .datasheet {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 30px;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .header .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .header .version {
+            margin-top: 15px;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 35px;
+        }
+        
+        .section h2 {
+            color: #1e3a8a;
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #3b82f6;
+        }
+        
+        .section h3 {
+            color: #334155;
+            font-size: 16px;
+            margin: 20px 0 10px 0;
+        }
+        
+        .component-diagram {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .ring-visual {
+            margin: 0 auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tr:nth-child(even) {
+            background: #f8fafc;
+        }
+        
+        .parameter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .param-box {
+            background: #f8fafc;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .param-box .label {
+            font-size: 12px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+        
+        .param-box .value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .note-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .note-box strong {
+            color: #92400e;
+        }
+        
+        .equation {
+            background: #f1f5f9;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-size: 15px;
+        }
+        
+        .footer {
+            background: #f8fafc;
+            padding: 20px 30px;
+            border-top: 2px solid #e2e8f0;
+            font-size: 12px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="datasheet">
+        <div class="header">
+            <h1>Ring Resonator (RING_RES_STD)</h1>
+            <div class="subtitle">Silicon Photonic Add-Drop Filter</div>
+            <div class="version">PDK Version 2.1 | Process: SiP220 | Document Rev. 1.3</div>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h2>1. Component Overview</h2>
+                <p>The RING_RES_STD is a standard single-mode silicon photonic ring resonator designed for wavelength-selective filtering, modulation, and sensing applications. The device features evanescent coupling between a bus waveguide and a circular ring cavity, providing sharp resonance characteristics in the C-band and L-band wavelength ranges.</p>
+                
+                <div class="component-diagram">
+                    <svg class="ring-visual" width="400" height="280" viewBox="0 0 400 280">
+                        <!-- Bus waveguide -->
+                        <line x1="50" y1="140" x2="170" y2="140" stroke="#1e3a8a" stroke-width="8"/>
+                        <line x1="230" y1="140" x2="350" y2="140" stroke="#1e3a8a" stroke-width="8"/>
+                        
+                        <!-- Ring -->
+                        <circle cx="200" cy="140" r="50" fill="none" stroke="#ef4444" stroke-width="6"/>
+                        
+                        <!-- Coupling region -->
+                        <rect x="170" y="132" width="60" height="16" fill="#fbbf24" opacity="0.4"/>
+                        
+                        <!-- Labels -->
+                        <text x="25" y="135" font-size="14" fill="#1e3a8a" font-weight="bold">INPUT</text>
+                        <text x="320" y="135" font-size="14" fill="#1e3a8a" font-weight="bold">THROUGH</text>
+                        <text x="200" y="80" font-size="14" fill="#ef4444" text-anchor="middle" font-weight="bold">Ring Cavity</text>
+                        <text x="200" y="220" font-size="12" fill="#64748b" text-anchor="middle">Coupling Gap: g</text>
+                        <text x="270" y="140" font-size="12" fill="#64748b">Radius: R</text>
+                        
+                        <!-- Arrows -->
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                                <polygon points="0 0, 10 3, 0 6" fill="#1e3a8a"/>
+                            </marker>
+                        </defs>
+                        <line x1="340" y1="140" x2="330" y2="140" stroke="#1e3a8a" stroke-width="2" marker-end="url(#arrowhead)"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>2. Key Specifications</h2>
+                
+                <div class="parameter-grid">
+                    <div class="param-box">
+                        <div class="label">Ring Radius</div>
+                        <div class="value">5 - 50 μm</div>
+                    </div>
+                    <div class="param-box">
+                        <div class="label">Free Spectral Range</div>
+                        <div class="value">1.6 - 16 nm</div>
+                    </div>
+                    <div class="param-box">
+                        <div class="label">Q-Factor (Typical)</div>
+                        <div class="value">10,000 - 50,000</div>
+                    </div>
+                    <div class="param-box">
+                        <div class="label">Extinction Ratio</div>
+                        <div class="value">> 20 dB</div>
+                    </div>
+                </div>
+                
+                <table>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Symbol</th>
+                        <th>Min</th>
+                        <th>Typ</th>
+                        <th>Max</th>
+                        <th>Unit</th>
+                    </tr>
+                    <tr>
+                        <td>Operating Wavelength</td>
+                        <td>λ</td>
+                        <td>1500</td>
+                        <td>1550</td>
+                        <td>1600</td>
+                        <td>nm</td>
+                    </tr>
+                    <tr>
+                        <td>Waveguide Width</td>
+                        <td>W</td>
+                        <td>0.45</td>
+                        <td>0.50</td>
+                        <td>0.55</td>
+                        <td>μm</td>
+                    </tr>
+                    <tr>
+                        <td>Waveguide Height</td>
+                        <td>H</td>
+                        <td>-</td>
+                        <td>0.22</td>
+                        <td>-</td>
+                        <td>μm</td>
+                    </tr>
+                    <tr>
+                        <td>Coupling Gap</td>
+                        <td>g</td>
+                        <td>0.15</td>
+                        <td>0.20</td>
+                        <td>0.30</td>
+                        <td>μm</td>
+                    </tr>
+                    <tr>
+                        <td>Through Port Loss</td>
+                        <td>IL<sub>T</sub></td>
+                        <td>-</td>
+                        <td>0.5</td>
+                        <td>1.5</td>
+                        <td>dB</td>
+                    </tr>
+                    <tr>
+                        <td>Group Index</td>
+                        <td>n<sub>g</sub></td>
+                        <td>-</td>
+                        <td>4.2</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Thermo-optic Coefficient</td>
+                        <td>dn/dT</td>
+                        <td>-</td>
+                        <td>1.86×10<sup>-4</sup></td>
+                        <td>-</td>
+                        <td>K<sup>-1</sup></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>3. Design Equations</h2>
+                
+                <h3>Free Spectral Range (FSR)</h3>
+                <div class="equation">
+                    FSR = λ² / (2πR·n<sub>g</sub>)
+                </div>
+                
+                <h3>Quality Factor (Q)</h3>
+                <div class="equation">
+                    Q = 2πn<sub>g</sub>R / (λ·α·L)
+                </div>
+                <p style="margin-top: 10px; font-size: 14px; color: #64748b;">where α is the propagation loss coefficient and L is the round-trip length</p>
+                
+                <h3>Resonance Condition</h3>
+                <div class="equation">
+                    λ<sub>res</sub> = n<sub>eff</sub>·L / m
+                </div>
+                <p style="margin-top: 10px; font-size: 14px; color: #64748b;">where m is the resonance order (integer)</p>
+            </div>
+            
+            <div class="section">
+                <h2>4. Layout Rules</h2>
+                
+                <table>
+                    <tr>
+                        <th>Rule</th>
+                        <th>Description</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>RR.1</td>
+                        <td>Minimum ring radius</td>
+                        <td>5 μm</td>
+                    </tr>
+                    <tr>
+                        <td>RR.2</td>
+                        <td>Minimum coupling gap</td>
+                        <td>0.15 μm</td>
+                    </tr>
+                    <tr>
+                        <td>RR.3</td>
+                        <td>Maximum coupling gap</td>
+                        <td>0.50 μm</td>
+                    </tr>
+                    <tr>
+                        <td>RR.4</td>
+                        <td>Coupling region length</td>
+                        <td>≥ 2 μm</td>
+                    </tr>
+                    <tr>
+                        <td>RR.5</td>
+                        <td>Minimum spacing to adjacent structures</td>
+                        <td>2 μm</td>
+                    </tr>
+                </table>
+                
+                <div class="note-box">
+                    <strong>Note:</strong> Bending radius should be kept above 5 μm to minimize radiation losses. For high-Q applications (Q > 30,000), use radius ≥ 10 μm.
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>5. Typical Performance</h2>
+                
+                <h3>Temperature Sensitivity</h3>
+                <p>Resonance wavelength shift: <strong>~70 pm/°C</strong></p>
+                
+                <h3>Fabrication Tolerance</h3>
+                <table>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Tolerance</th>
+                        <th>Impact on λ<sub>res</sub></th>
+                    </tr>
+                    <tr>
+                        <td>Waveguide width (±1 nm)</td>
+                        <td>±1 nm</td>
+                        <td>~0.15 nm</td>
+                    </tr>
+                    <tr>
+                        <td>Gap variation (±5 nm)</td>
+                        <td>±5 nm</td>
+                        <td>~0.05 nm</td>
+                    </tr>
+                    <tr>
+                        <td>Radius variation (±10 nm)</td>
+                        <td>±10 nm</td>
+                        <td>~0.02 nm</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>6. Applications</h2>
+                <ul style="list-style-position: inside; line-height: 1.8;">
+                    <li>Wavelength division multiplexing (WDM) filters</li>
+                    <li>Optical modulators and switches</li>
+                    <li>Biosensing and chemical sensing</li>
+                    <li>Microwave photonic filters</li>
+                    <li>Laser cavity stabilization</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>7. Simulation Models</h2>
+                <p><strong>Compact Model:</strong> Available in Lumerical INTERCONNECT (S-parameter based)</p>
+                <p><strong>Full-wave Model:</strong> FDTD and EME models available for design verification</p>
+                <p><strong>Behavioral Model:</strong> Transfer matrix method implementation in Python/MATLAB</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <strong>Silicon Photonics Foundry</strong> | Contact: pdk-support@siliconphotonics.com | www.siphotonics.com<br>
+            © 2025 Silicon Photonics Foundry. All specifications subject to change without notice.
+        </div>
+    </div>
+</body>
+</html>
