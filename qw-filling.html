@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quantum Well Filling</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: lab-instrument console. Controls strip on top, two coupled plots sharing one energy axis, readouts underneath. */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --ink:#151a20; --muted:#5b6672; --line:#d8dee5;
+  --gaas:#dfe7f1; --algaas:#e7e1f0; --well:#2153c4; --carrier:#cc7a0a; --bulk:#7a8594; --warn:#a8460f;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0d1014; --surface:#151a20; --ink:#e5e9ee; --muted:#97a1ad; --line:#2a323c;
+  --gaas:#1b2633; --algaas:#262236; --well:#7aa2ff; --carrier:#f2a93b; --bulk:#8f99a6; --warn:#f08a4b; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0d1014; --surface:#151a20; --ink:#e5e9ee; --muted:#97a1ad; --line:#2a323c;
+  --gaas:#1b2633; --algaas:#262236; --well:#7aa2ff; --carrier:#f2a93b; --bulk:#8f99a6; --warn:#f08a4b; color-scheme:dark }
+
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header h1{font-family:var(--f-display);font-weight:600;font-size:1.9rem;letter-spacing:.01em;margin:0;text-wrap:balance}
+header p{margin:.2rem 0 0;color:var(--muted);max-width:68ch}
+.stack{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+
+.controls{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:14px}
+.sliders{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px 22px}
+.ctl{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ctl label{display:flex;justify-content:space-between;gap:8px;font-family:var(--f-display);font-weight:500;font-size:.82rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.ctl output{font-family:var(--f-mono);font-size:.86rem;text-transform:none;letter-spacing:0;color:var(--ink);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--well)}
+.toggles{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:5px;overflow:hidden}
+.seg button{font:500 .84rem var(--f-body);background:transparent;color:var(--muted);border:0;padding:5px 11px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--well);color:var(--surface)}
+.seg button:focus-visible,.btn:focus-visible,input:focus-visible{outline:2px solid var(--carrier);outline-offset:2px}
+.btn{font:500 .84rem var(--f-body);background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:5px 12px;cursor:pointer}
+.btn[aria-pressed="true"]{border-color:var(--carrier);color:var(--carrier)}
+.check{display:inline-flex;align-items:center;gap:6px;font-size:.86rem;color:var(--muted)}
+.tlabel{font-family:var(--f-display);font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-right:-8px}
+
+.plots{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 10px 6px;min-width:0;display:flex;flex-direction:column;gap:4px}
+.panel h2{font-family:var(--f-display);font-weight:600;font-size:.95rem;margin:2px 4px;letter-spacing:.02em}
+.panel h2 span{font-family:var(--f-body);font-weight:400;color:var(--muted);font-size:.82rem}
+canvas{width:100%;height:440px;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.78rem;color:var(--muted);margin:0 4px 4px}
+.legend i{display:inline-block;width:18px;height:0;border-top:2px solid;vertical-align:middle;margin-right:5px}
+
+.warn{border:1px solid var(--warn);color:var(--warn);border-radius:5px;padding:7px 12px;font-size:.88rem}
+
+.lower{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+.readouts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.ro{background:var(--surface);padding:10px 14px;min-width:0}
+.ro dt{font-size:.78rem;color:var(--muted)}
+.ro dd{margin:2px 0 0;font-family:var(--f-mono);font-size:1.02rem;font-variant-numeric:tabular-nums}
+.ro dd small{color:var(--muted);font-size:.78rem}
+.tablebox{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:8px 12px;overflow-x:auto;min-width:0}
+table{border-collapse:collapse;width:100%;font-family:var(--f-mono);font-size:.84rem;font-variant-numeric:tabular-nums}
+th{font-family:var(--f-display);font-weight:500;font-size:.76rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:right;padding:4px 6px;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+td{text-align:right;padding:3px 6px}
+td .bar{display:inline-block;height:7px;background:var(--carrier);vertical-align:middle;margin-right:6px;border-radius:1px}
+
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px;font-size:.9rem}
+.notes h3{font-family:var(--f-display);font-weight:600;font-size:.95rem;margin:0 0 4px;letter-spacing:.02em}
+.notes p,.notes ul{margin:0;color:var(--muted);max-width:66ch}
+.notes ul{padding-left:1.1em}
+.notes li{margin:2px 0}
+.notes code{font-family:var(--f-mono);font-size:.84rem;color:var(--ink)}
+
+@media (max-width:900px){
+  .sliders{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .plots,.lower,.notes{grid-template-columns:1fr}
+  canvas{height:380px}
+}
+@media (max-width:460px){ .sliders{grid-template-columns:1fr} canvas{height:340px} }
+
+/* Slide mode: qw-filling.html#slide  (add -dark or -light to force a theme, e.g. #slide-dark) */
+html.slide body{padding-block:6px 6px;font-size:14px}
+html.slide .wrap{gap:8px;max-width:none}
+html.slide header p,html.slide .notes,html.slide .tablebox,html.slide .legend{display:none}
+html.slide header h1{font-size:1.25rem}
+html.slide .controls{padding:8px 12px;gap:8px}
+html.slide .plots{grid-template-columns:1.15fr 1fr}
+html.slide canvas{height:340px}
+html.slide .lower{grid-template-columns:1fr}
+html.slide .readouts{grid-template-columns:repeat(3,minmax(0,1fr))}
+html.slide .ro{padding:5px 10px}
+html.slide .ro dd{font-size:.9rem}
+</style>
+
+<style>html,body{margin:0}*,*::before,*::after{box-sizing:border-box}[hidden]{display:none!important}</style>
+<script>(function(){var h=location.hash.toLowerCase(),r=document.documentElement;
+if(h.indexOf('slide')>=0)r.classList.add('slide');
+if(h.indexOf('dark')>=0)r.setAttribute('data-theme','dark');else if(h.indexOf('light')>=0)r.setAttribute('data-theme','light');})();</script>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="stack" id="stackLabel">Al<sub>0.30</sub>Ga<sub>0.70</sub>As / GaAs / Al<sub>0.30</sub>Ga<sub>0.70</sub>As</div>
+  <h1>Quantum Well Filling</h1>
+  <p>Shrink the GaAs layer at a fixed carrier density per unit volume. The carriers leave the bulk continuum near the band edge and pile up on a few discrete subbands sitting higher in energy.</p>
+</header>
+
+<section class="controls" aria-label="Simulation controls">
+  <div class="sliders">
+    <div class="ctl"><label for="sL">GaAs thickness L <output id="oL"></output></label><input id="sL" type="range" min="2" max="60" step="0.1" value="10"></div>
+    <div class="ctl"><label for="sx">Al fraction x <output id="ox"></output></label><input id="sx" type="range" min="0.10" max="0.45" step="0.01" value="0.30"></div>
+    <div class="ctl"><label for="sn">Carrier density n <output id="on"></output></label><input id="sn" type="range" min="16" max="18.7" step="0.01" value="18"></div>
+    <div class="ctl"><label for="sT">Temperature T <output id="oT"></output></label><input id="sT" type="range" min="4" max="400" step="1" value="77"></div>
+  </div>
+  <div class="toggles">
+    <span class="tlabel">Carriers</span>
+    <div class="seg" role="group" aria-label="Carrier type"><button id="bE" aria-pressed="true">Electrons</button><button id="bH" aria-pressed="false">Heavy holes</button></div>
+    <span class="tlabel">Barrier</span>
+    <div class="seg" role="group" aria-label="Barrier model"><button id="bFin" aria-pressed="true">Finite (AlGaAs)</button><button id="bInf" aria-pressed="false">Infinite walls</button></div>
+    <span class="tlabel">Right plot</span>
+    <div class="seg" role="group" aria-label="Right plot"><button id="bDos" aria-pressed="true">g(E)</button><button id="bCum" aria-pressed="false">N(E) cumulative</button></div>
+    <label class="check"><input id="cPsi" type="checkbox" checked> |ψ|²</label>
+    <button class="btn" id="bSweep" aria-pressed="false">Sweep thickness</button>
+  </div>
+</section>
+
+<div class="warn" id="warn" hidden></div>
+
+<section class="plots">
+  <div class="panel">
+    <h2>Band profile and filling <span id="leftSub">· electron energy from GaAs E<sub>c</sub></span></h2>
+    <canvas id="cvL" aria-label="Band profile with subbands and carriers"></canvas>
+    <div class="legend"><span><i style="border-color:var(--carrier)"></i>Fermi level E<sub>F</sub> (well)</span><span>dot height above its level = in-plane kinetic energy</span></div>
+  </div>
+  <div class="panel">
+    <h2 id="rightTitle">Density of states <span>· per unit volume of GaAs</span></h2>
+    <canvas id="cvR" aria-label="Density of states, bulk versus quantum well"></canvas>
+    <div class="legend" id="rightLegend"></div>
+  </div>
+</section>
+
+<section class="lower">
+  <dl class="readouts" id="readouts"></dl>
+  <div class="tablebox"><table><thead><tr><th>Subband</th><th>E (meV)</th><th>Occupation</th></tr></thead><tbody id="tbody"></tbody></table></div>
+</section>
+
+<section class="notes">
+  <div>
+    <h3>What to watch</h3>
+    <ul>
+      <li>The carrier density per unit volume is held fixed, so the sheet density is <code>n·L</code>.</li>
+      <li>As L shrinks, e1 rises as roughly 1/L². The bulk states between the band edge and e1 are gone, and the carriers sit higher: compare the two Fermi levels and the mean energies.</li>
+      <li>Switch to <em>Infinite walls</em> and <em>N(E)</em>: the staircase touches √E exactly at each corner, and the shaded gap is the state deficit (the Weyl surface term). States are moved up, never added.</li>
+      <li>The step height <code>m*/(πħ²L)</code> grows as 1/L, so just above e1 there are more states than bulk has just above its own edge. That is the useful sense in which the DOS "increases".</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Model</h3>
+    <ul>
+      <li>Single-band effective mass, BenDaniel–Duke matching, spin degeneracy 2. Subbands use the GaAs in-plane mass; the DOS is normalised by the well width L.</li>
+      <li>Band offsets: ΔE<sub>g</sub> = 1.247x eV, split 65:35 between conduction and valence band. Masses: m<sub>e</sub> = 0.067 + 0.083x, m<sub>hh</sub> = 0.51 + 0.25x (isotropic; the real heavy-hole in-plane mass is lighter). Light holes are not included.</li>
+      <li>Only bound states are populated. Carriers that would sit in the barrier continuum are not modelled; a warning appears when the Fermi level gets close to the barrier top.</li>
+      <li>No self-consistent Poisson solution: the well stays square (flat-band).</li>
+    </ul>
+  </div>
+</section>
+</div>
+
+<script>
+(function(){
+const C=0.0380998;          // hbar^2/(2 m0), eV nm^2
+const KB=8.617333e-5;       // eV/K
+const S={L:10,x:0.30,logn:18,T:77,carrier:'e',barrier:'finite',view:'dos',psi:true};
+const $=id=>document.getElementById(id);
+const softplus=z=>z>60?z:(z<-60?Math.exp(z):Math.log1p(Math.exp(z)));
+function bisect(fn,target,lo,hi){for(let i=0;i<90;i++){const m=.5*(lo+hi);if(fn(m)<target)lo=m;else hi=m;}return .5*(lo+hi);}
+
+function material(){
+  const dEg=1.247*S.x, e=S.carrier==='e';
+  return {V0:e?0.65*dEg:0.35*dEg, mw:e?0.067:0.51, mb:e?0.067+0.083*S.x:0.51+0.25*S.x, tag:e?'e':'hh'};
+}
+function finiteLevels(L,V0,mw,mb){
+  const out=[], N=4000;
+  const f=(E,par)=>{const k=Math.sqrt(mw*E/C),K=Math.sqrt(mb*(V0-E)/C),a=k*L/2;
+    return par===0?(k/mw)*Math.sin(a)-(K/mb)*Math.cos(a):(k/mw)*Math.cos(a)+(K/mb)*Math.sin(a);};
+  for(const par of [0,1]){
+    let Ep=V0*1e-7, fp=f(Ep,par);
+    for(let i=1;i<=N;i++){
+      const E=V0*(i/N)*(1-1e-9), fe=f(E,par);
+      if(fp===0||fp*fe<0){let lo=Ep,hi=E,flo=fp;for(let j=0;j<60;j++){const m=.5*(lo+hi),fm=f(m,par);if(flo*fm<=0)hi=m;else{lo=m;flo=fm;}}
+        const Er=.5*(lo+hi);out.push({E:Er,par,k:Math.sqrt(mw*Er/C),K:Math.sqrt(mb*(V0-Er)/C)});}
+      Ep=E;fp=fe;
+    }
+  }
+  out.sort((a,b)=>a.E-b.E);out.forEach((l,i)=>l.n=i+1);return out;
+}
+function infiniteLevels(L,mw,Emax){
+  const out=[];for(let n=1;n<400;n++){const E=C*Math.pow(n*Math.PI/L,2)/mw;if(E>Emax)break;out.push({E,n});}return out;
+}
+const g3=(E,mw)=>E<=0?0:(1/(2*Math.PI*Math.PI))*Math.pow(mw/C,1.5)*Math.sqrt(E);
+const N3=(E,mw)=>E<=0?0:(1/(3*Math.PI*Math.PI))*Math.pow(mw*E/C,1.5);
+function bulkMoments(EF,mw,kT){
+  const umax=Math.sqrt(Math.max(EF,0)+60*kT),N=1600,du=umax/N,pre=(1/(2*Math.PI*Math.PI))*Math.pow(mw/C,1.5);
+  let n=0,e=0;
+  for(let i=0;i<=N;i++){const u=i*du,E=u*u,w=(i===0||i===N)?.5:1;const val=pre*2*u*u/(1+Math.exp((E-EF)/kT))*w*du;n+=val;e+=val*E;}
+  return {n,e};
+}
+
+let R=null;
+function compute(){
+  const m=material(), kT=KB*S.T, L=S.L;
+  const fin=S.barrier==='finite';
+  const levels=fin?finiteLevels(L,m.V0,m.mw,m.mb):infiniteLevels(L,m.mw,4);
+  const n=Math.pow(10,S.logn)*1e-21;          // nm^-3
+  const D2=m.mw/(2*Math.PI*C);                 // nm^-2 eV^-1 per subband
+  const ns=n*L;
+  const sheet=EF=>levels.reduce((a,l)=>a+D2*kT*softplus((EF-l.E)/kT),0);
+  const EFw=levels.length?bisect(sheet,ns,-2,6):NaN;
+  const pops=levels.map(l=>D2*kT*softplus((EFw-l.E)/kT)/ns);
+  // mean in-plane energy per subband
+  let meanW=0;
+  levels.forEach((l,i)=>{ if(pops[i]<1e-7)return; const a=l.E-EFw,emax=Math.max(-a,0)+60*kT,N=500,d=emax/N;let s0=0,s1=0;
+    for(let j=0;j<=N;j++){const e=j*d,w=(j===0||j===N)?.5:1,fv=1/(1+Math.exp((a+e)/kT))*w;s0+=fv;s1+=fv*e;} l.meanEps=s1/s0; meanW+=pops[i]*(l.E+l.meanEps);});
+  const EFb=bisect(EF=>bulkMoments(EF,m.mw,kT).n,n,-2,6);
+  const bm=bulkMoments(EFb,m.mw,kT);
+  const top=1.32*m.V0, bot=-0.08*m.V0;
+  R={m,kT,L,fin,levels,n,D2,EFw,EFb,pops,meanW,meanB:bm.e/bm.n,top,bot};
+}
+
+/* ---------- drawing ---------- */
+const cvL=$('cvL'),cvR=$('cvR');
+function tok(){const cs=getComputedStyle(document.documentElement),g=k=>cs.getPropertyValue(k).trim();
+  return {bg:g('--surface'),ink:g('--ink'),muted:g('--muted'),line:g('--line'),gaas:g('--gaas'),algaas:g('--algaas'),well:g('--well'),carrier:g('--carrier'),bulk:g('--bulk'),mono:g('--f-mono')};}
+function prep(cv){const r=cv.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+  const w=Math.max(10,Math.round(r.width)),h=Math.max(10,Math.round(r.height));
+  if(cv.width!==w*dpr||cv.height!==h*dpr){cv.width=w*dpr;cv.height=h*dpr;}
+  const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);return {c,w,h};}
+function alpha(col,a){ // accepts #rrggbb
+  if(col[0]!=='#')return col;const v=parseInt(col.slice(1),16);return `rgba(${v>>16&255},${v>>8&255},${v&255},${a})`;}
+function niceStep(range,target){const raw=range/target,p=Math.pow(10,Math.floor(Math.log10(raw))),f=raw/p;return (f<1.5?1:f<3.5?2:f<7.5?5:10)*p;}
+const PAD={t:14,b:36,l:54,r:12};
+function yMap(h){const y0=h-PAD.b,y1=PAD.t;return E=>y0-(E-R.bot)/(R.top-R.bot)*(y0-y1);}
+function energyGrid(c,w,h,T,withLabels){
+  const Y=yMap(h),st=niceStep((R.top-R.bot)*1000,6);
+  c.font=`11px ${T.mono}`;c.textAlign='right';c.textBaseline='middle';
+  for(let v=Math.ceil(R.bot*1000/st)*st;v<=R.top*1000;v+=st){const y=Math.round(Y(v/1000))+.5;
+    c.strokeStyle=T.line;c.lineWidth=1;c.beginPath();c.moveTo(PAD.l,y);c.lineTo(w-PAD.r,y);c.stroke();
+    if(withLabels){c.fillStyle=T.muted;c.fillText(String(Math.round(v)),PAD.l-6,y);}}
+}
+function hash(i){const s=Math.sin(i*12.9898+78.233)*43758.5453;return s-Math.floor(s);}
+
+function drawLeft(T){
+  const {c,w,h}=prep(cvL),Y=yMap(h),W=32,L=R.L,{V0}=R.m;
+  const X=x=>PAD.l+(x+W)/(2*W)*(w-PAD.l-PAD.r);
+  energyGrid(c,w,h,T,true);
+  // materials below band edge
+  const yb=h-PAD.b;
+  if(R.fin){
+    c.fillStyle=T.algaas;c.fillRect(X(-W),Y(V0),X(-L/2)-X(-W),yb-Y(V0));c.fillRect(X(L/2),Y(V0),X(W)-X(L/2),yb-Y(V0));
+  }else{
+    c.fillStyle=T.algaas;c.fillRect(X(-W),PAD.t,X(-L/2)-X(-W),yb-PAD.t);c.fillRect(X(L/2),PAD.t,X(W)-X(L/2),yb-PAD.t);
+    c.save();c.beginPath();c.rect(X(-W),PAD.t,X(-L/2)-X(-W),yb-PAD.t);c.rect(X(L/2),PAD.t,X(W)-X(L/2),yb-PAD.t);c.clip();
+    c.strokeStyle=alpha(T.muted,.35);c.lineWidth=1;for(let s=-h;s<w+h;s+=9){c.beginPath();c.moveTo(s,yb);c.lineTo(s+h,yb-h);c.stroke();}c.restore();
+  }
+  c.fillStyle=T.gaas;c.fillRect(X(-L/2),Y(0),X(L/2)-X(-L/2),yb-Y(0));
+  // band profile
+  c.strokeStyle=T.ink;c.lineWidth=2;c.beginPath();
+  const topY=R.fin?Y(V0):PAD.t;
+  c.moveTo(X(-W),topY);c.lineTo(X(-L/2),topY);c.lineTo(X(-L/2),Y(0));c.lineTo(X(L/2),Y(0));c.lineTo(X(L/2),topY);c.lineTo(X(W),topY);c.stroke();
+  // material labels
+  c.font=`11px ${T.mono}`;c.fillStyle=T.muted;c.textAlign='center';c.textBaseline='alphabetic';
+  c.fillText('AlGaAs',X(-W/2-L/4),yb-8);c.fillText('AlGaAs',X(W/2+L/4),yb-8);
+  if(X(L/2)-X(-L/2)>44)c.fillText('GaAs',X(0),yb-8);
+  // x axis
+  c.textBaseline='top';c.fillStyle=T.muted;
+  for(let v=-30;v<=30;v+=10){c.fillText(String(v),X(v),yb+6);}
+  c.fillText('position z (nm)',X(0),yb+20);
+  c.save();c.translate(13,(PAD.t+yb)/2);c.rotate(-Math.PI/2);c.textAlign='center';c.textBaseline='middle';c.fillText(R.m.tag==='e'?'electron energy (meV)':'hole energy (meV)',0,0);c.restore();
+  // barrier top label
+  if(R.fin){c.textAlign='left';c.textBaseline='bottom';c.fillStyle=T.muted;c.fillText(`ΔE = ${(V0*1000).toFixed(0)} meV`,X(-W)+4,Y(V0)-3);}
+
+  const lv=R.levels.filter(l=>l.E<=R.top);
+  // wavefunctions
+  if(S.psi){
+    lv.slice(0,6).forEach((l,i)=>{
+      const nxt=lv[i+1]?lv[i+1].E:(R.fin?V0:l.E+(l.E-(lv[i-1]?lv[i-1].E:0)));
+      const amp=Math.min(0.6*(nxt-l.E),0.09*(R.top-R.bot));
+      const pts=[];let mx=0;
+      for(let j=0;j<=240;j++){const z=-W+2*W*j/240;let p;
+        if(R.fin){const az=Math.abs(z);
+          if(l.par===0)p=az<L/2?Math.cos(l.k*z):Math.cos(l.k*L/2)*Math.exp(-l.K*(az-L/2));
+          else p=az<L/2?Math.sin(l.k*z):Math.sign(z)*Math.sin(l.k*L/2)*Math.exp(-l.K*(az-L/2));}
+        else p=Math.abs(z)<L/2?Math.sin(l.n*Math.PI*(z+L/2)/L):0;
+        p=p*p;mx=Math.max(mx,p);pts.push([z,p]);}
+      c.beginPath();c.moveTo(X(-W),Y(l.E));pts.forEach(([z,p])=>c.lineTo(X(z),Y(l.E+amp*p/mx)));c.lineTo(X(W),Y(l.E));c.closePath();
+      c.fillStyle=alpha(T.well,.13);c.fill();c.strokeStyle=alpha(T.well,.55);c.lineWidth=1;c.stroke();
+    });
+  }
+  // levels
+  c.font=`11px ${T.mono}`;
+  lv.forEach((l,i)=>{const y=Math.round(Y(l.E))+.5;
+    if(R.fin){c.setLineDash([3,3]);c.strokeStyle=alpha(T.well,.5);c.lineWidth=1;c.beginPath();c.moveTo(X(-W),y);c.lineTo(X(W),y);c.stroke();c.setLineDash([]);}
+    c.strokeStyle=T.well;c.lineWidth=2;c.beginPath();c.moveTo(X(-L/2),y);c.lineTo(X(L/2),y);c.stroke();
+    if(i<8||lv.length<=10){c.fillStyle=T.well;c.textAlign='left';c.textBaseline='middle';c.fillText(`${R.m.tag}${l.n}`,X(L/2)+5,y-6);}
+  });
+  // carriers
+  const total=140,alloc=[];let used=0;
+  const raw=R.pops.map((p,i)=>({i,v:p*total,f:Math.floor(p*total)}));
+  raw.forEach(r=>{alloc[r.i]=r.f;used+=r.f;});
+  raw.slice().sort((a,b)=>(b.v-b.f)-(a.v-a.f)).slice(0,Math.max(0,total-used)).forEach(r=>alloc[r.i]++);
+  let id=0;c.fillStyle=T.carrier;
+  R.levels.forEach((l,i)=>{const k=alloc[i]||0;if(!k)return;const a=l.E-R.EFw,kT=R.kT;
+    const Sinf=kT*softplus(-a/kT),hiE=Math.max(-a,0)+60*kT;
+    for(let j=0;j<k;j++){const q=(j+.5)/k*Sinf;let lo=0,hi=hiE;
+      for(let t=0;t<60;t++){const mid=.5*(lo+hi),Sv=mid-kT*(softplus((a+mid)/kT)-softplus(a/kT));if(Sv<q)lo=mid;else hi=mid;}
+      const eps=.5*(lo+hi),E=l.E+eps;if(E>R.top){id++;continue;}
+      const z=-L/2+(0.06+0.88*hash(id++ +i*977))*L;
+      c.beginPath();c.arc(X(z),Y(E)-2.5,2.6,0,2*Math.PI);c.fill();}
+  });
+  // Fermi level
+  if(isFinite(R.EFw)&&R.EFw<R.top&&R.EFw>R.bot){const y=Math.round(Y(R.EFw))+.5;c.strokeStyle=T.carrier;c.lineWidth=1.5;c.setLineDash([6,4]);c.beginPath();c.moveTo(PAD.l,y);c.lineTo(w-PAD.r,y);c.stroke();c.setLineDash([]);
+    c.fillStyle=T.carrier;c.textAlign='right';c.textBaseline='bottom';c.fillText('E_F',w-PAD.r-2,y-3);}
+}
+
+function drawRight(T){
+  const {c,w,h}=prep(cvR),Y=yMap(h),{mw,V0}=R.m,L=R.L,yb=h-PAD.b;
+  energyGrid(c,w,h,T,true);
+  const dos=S.view==='dos';
+  const stair=E=>{let k=0;for(const l of R.levels)if(l.E<E)k++;return k*R.D2/L;};
+  const cumW=E=>R.levels.reduce((a,l)=>a+(E>l.E?R.D2/L*(E-l.E):0),0);
+  const xmax=dos?Math.max(1.1*g3(R.top,mw),R.D2/3):1.08*Math.max(N3(R.top,mw),R.n*1.15);
+  const X=v=>PAD.l+Math.min(v/xmax,1.02)*(w-PAD.l-PAD.r);
+  // units
+  const xmaxCm=xmax*1e21,ex=Math.floor(Math.log10(xmaxCm)),sc=Math.pow(10,ex);
+  const st=niceStep(xmaxCm/sc,4);
+  c.font=`11px ${T.mono}`;c.textAlign='center';c.textBaseline='top';c.fillStyle=T.muted;
+  for(let v=0;v<=xmaxCm/sc+1e-9;v+=st){const x=Math.round(X(v*sc*1e-21))+.5;c.strokeStyle=T.line;c.beginPath();c.moveTo(x,PAD.t);c.lineTo(x,yb);c.stroke();c.fillText(+v.toFixed(2)+'',x,yb+6);}
+  c.fillText(dos?`g(E)  (10^${ex} cm⁻³ eV⁻¹)`:`N(E)  (10^${ex} cm⁻³)`,(PAD.l+w-PAD.r)/2,yb+20);
+  c.save();c.translate(13,(PAD.t+yb)/2);c.rotate(-Math.PI/2);c.textAlign='center';c.textBaseline='middle';c.fillText('energy (meV)',0,0);c.restore();
+  c.save();c.beginPath();c.rect(PAD.l,PAD.t,w-PAD.l-PAD.r,yb-PAD.t);c.clip();
+  // barrier continuum band
+  if(R.fin){const y=Y(V0);c.fillStyle=alpha(T.muted,.08);c.fillRect(PAD.l,PAD.t,w-PAD.l-PAD.r,y-PAD.t);
+    c.strokeStyle=T.muted;c.setLineDash([2,3]);c.beginPath();c.moveTo(PAD.l,Math.round(y)+.5);c.lineTo(w-PAD.r,Math.round(y)+.5);c.stroke();c.setLineDash([]);
+    c.fillStyle=T.muted;c.textAlign='right';c.textBaseline='bottom';c.fillText('barrier continuum (not populated)',w-PAD.r-4,y-3);}
+  const Eend=R.fin?Math.min(V0,R.top):R.top, NE=700;
+  const fW=E=>1/(1+Math.exp((E-R.EFw)/R.kT)), fB=E=>1/(1+Math.exp((E-R.EFb)/R.kT));
+  if(dos){
+    // filled bulk
+    c.beginPath();c.moveTo(X(0),Y(0));for(let i=0;i<=NE;i++){const E=R.top*i/NE;c.lineTo(X(g3(E,mw)*fB(E)),Y(E));}c.lineTo(X(0),Y(R.top));c.closePath();c.fillStyle=alpha(T.bulk,.22);c.fill();
+    // filled well
+    c.beginPath();c.moveTo(X(0),Y(0));for(let i=0;i<=NE;i++){const E=Eend*i/NE;c.lineTo(X(stair(E)*fW(E)),Y(E));}c.lineTo(X(0),Y(Eend));c.closePath();c.fillStyle=alpha(T.carrier,.42);c.fill();
+    // bulk curve
+    c.strokeStyle=T.bulk;c.lineWidth=1.6;c.setLineDash([5,4]);c.beginPath();c.moveTo(X(0),Y(R.bot));c.lineTo(X(0),Y(0));for(let i=0;i<=NE;i++){const E=R.top*i/NE;c.lineTo(X(g3(E,mw)),Y(E));}c.stroke();c.setLineDash([]);
+    // staircase
+    c.strokeStyle=T.well;c.lineWidth=2.2;c.beginPath();c.moveTo(X(0),Y(R.bot));let cur=0;
+    for(const l of R.levels){if(l.E>Eend)break;c.lineTo(X(cur),Y(l.E));cur+=R.D2/L;c.lineTo(X(cur),Y(l.E));}
+    c.lineTo(X(cur),Y(Eend));c.stroke();
+    // corner touch markers (infinite)
+    if(!R.fin){c.fillStyle=T.well;for(const l of R.levels){if(l.E>R.top)break;c.beginPath();c.arc(X(g3(l.E,mw)),Y(l.E),3.2,0,2*Math.PI);c.fill();}}
+    c.restore();
+    // clipped step marker
+    if(R.D2/L>xmax&&R.levels.length&&R.levels[0].E<Eend){c.fillStyle=T.well;c.textAlign='right';c.textBaseline='bottom';c.font=`11px ${T.mono}`;
+      c.fillText(`step ${(R.D2/L*1e21/sc).toFixed(1)} → off scale`,w-PAD.r-4,Y(R.levels[0].E)-4);}
+  }else{
+    // deficit shading between bulk N and well N
+    c.beginPath();for(let i=0;i<=NE;i++){const E=Eend*i/NE;const x=X(N3(E,mw));i?c.lineTo(x,Y(E)):c.moveTo(x,Y(E));}
+    for(let i=NE;i>=0;i--){const E=Eend*i/NE;c.lineTo(X(cumW(E)),Y(E));}c.closePath();c.fillStyle=alpha(T.well,.12);c.fill();
+    c.strokeStyle=T.bulk;c.lineWidth=1.6;c.setLineDash([5,4]);c.beginPath();for(let i=0;i<=NE;i++){const E=R.top*i/NE;const x=X(N3(E,mw));i?c.lineTo(x,Y(E)):c.moveTo(x,Y(E));}c.stroke();c.setLineDash([]);
+    c.strokeStyle=T.well;c.lineWidth=2.2;c.beginPath();for(let i=0;i<=NE;i++){const E=Eend*i/NE;const x=X(cumW(E));i?c.lineTo(x,Y(E)):c.moveTo(x,Y(E));}c.stroke();
+    // carrier density line
+    const xn=Math.round(X(R.n))+.5;c.strokeStyle=T.carrier;c.lineWidth=1.5;c.beginPath();c.moveTo(xn,PAD.t);c.lineTo(xn,yb);c.stroke();
+    c.restore();
+    c.fillStyle=T.carrier;c.font=`11px ${T.mono}`;c.textAlign='left';c.textBaseline='top';c.fillText('n',xn+4,PAD.t+2);
+  }
+  // Fermi levels
+  c.font=`11px ${T.mono}`;
+  const efLine=(E,col,dash,lab,dy)=>{if(!(E>R.bot&&E<R.top))return;const y=Math.round(Y(E))+.5;c.strokeStyle=col;c.lineWidth=1.4;c.setLineDash(dash);c.beginPath();c.moveTo(PAD.l,y);c.lineTo(w-PAD.r,y);c.stroke();c.setLineDash([]);
+    c.fillStyle=col;c.textAlign='right';c.textBaseline=dy<0?'bottom':'top';c.fillText(lab,w-PAD.r-2,y+dy);};
+  const below=R.EFb<R.EFw;
+  efLine(R.EFw,T.carrier,[6,4],'E_F well',below?-3:3);
+  efLine(R.EFb,T.bulk,[2,3],'E_F bulk',below?3:-3);
+}
+
+function fmtN(v){const e=Math.floor(Math.log10(v)),m=v/Math.pow(10,e);return `${m.toFixed(1)}×10<sup>${e}</sup>`;}
+function updateText(){
+  const tag=R.m.tag;
+  $('oL').textContent=`${S.L.toFixed(1)} nm`;$('ox').textContent=S.x.toFixed(2);
+  $('on').innerHTML=`${fmtN(Math.pow(10,S.logn))} cm⁻³`;$('oT').textContent=`${S.T} K`;
+  const xa=S.x.toFixed(2),xg=(1-S.x).toFixed(2);
+  $('stackLabel').innerHTML=`Al<sub>${xa}</sub>Ga<sub>${xg}</sub>As / GaAs (${S.L.toFixed(1)} nm) / Al<sub>${xa}</sub>Ga<sub>${xg}</sub>As`;
+  $('leftSub').innerHTML=tag==='e'?'· electron energy from GaAs E<sub>c</sub>':'· hole energy from GaAs E<sub>v</sub>, increasing upward';
+  $('rightTitle').innerHTML=(S.view==='dos'?'Density of states ':'Cumulative states below E ')+'<span>· per unit volume of GaAs</span>';
+  $('rightLegend').innerHTML=S.view==='dos'
+    ?'<span><i style="border-color:var(--bulk);border-top-style:dashed"></i>bulk GaAs √E</span><span><i style="border-color:var(--well)"></i>well staircase m*/(πħ²L) per subband</span><span>shaded = occupied g·f (bulk grey, well amber)</span>'
+    :'<span><i style="border-color:var(--bulk);border-top-style:dashed"></i>bulk N(E) ∝ E<sup>3/2</sup></span><span><i style="border-color:var(--well)"></i>well N(E)</span><span>blue band = states the well lacks</span><span><i style="border-color:var(--carrier)"></i>n</span>';
+  const e1=R.levels[0]?R.levels[0].E:NaN;
+  const meV=v=>(v*1000).toFixed(1);
+  const items=[
+    [`Ground level ${tag}1`,`${meV(e1)} <small>meV above the band edge</small>`],
+    ['Bound subbands',R.fin?`${R.levels.length}`:'unlimited <small>(ideal walls)</small>'],
+    ['Fermi level, well / bulk',`${meV(R.EFw)} / ${meV(R.EFb)} <small>meV</small>`],
+    ['Mean carrier energy, well / bulk',`${meV(R.meanW)} / ${meV(R.meanB)} <small>meV</small>`],
+    [`Bulk states below ${tag}1, pushed up`,`${fmtN(N3(e1,R.m.mw)*1e21)} <small>cm⁻³</small>`],
+    [`Carriers in ${tag}1`,`${(100*(R.pops[0]||0)).toFixed(1)} %`],
+  ];
+  $('readouts').innerHTML=items.map(([a,b])=>`<div class="ro"><dt>${a}</dt><dd>${b}</dd></div>`).join('');
+  const rows=R.levels.slice(0,10).map((l,i)=>`<tr><td>${tag}${l.n}</td><td>${meV(l.E)}</td><td><span class="bar" style="width:${Math.max(1,70*R.pops[i]).toFixed(1)}px"></span>${(100*R.pops[i]).toFixed(1)} %</td></tr>`);
+  if(R.levels.length>10)rows.push(`<tr><td colspan="3" style="text-align:left;color:var(--muted)">… ${R.levels.length-10} more</td></tr>`);
+  $('tbody').innerHTML=rows.join('');
+  const w=$('warn');
+  if(R.fin&&R.EFw>R.m.V0-3*R.kT){w.hidden=false;w.textContent=`The well Fermi level is within 3kT of the barrier top (${meV(R.m.V0)} meV). A real structure would spill carriers into the AlGaAs continuum, which this model does not populate. Lower n or T, or raise x.`;}
+  else w.hidden=true;
+}
+
+let raf=0;
+function render(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;compute();updateText();const T=tok();drawLeft(T);drawRight(T);});}
+
+/* ---------- controls ---------- */
+const bind=(id,key,parse)=>$(id).addEventListener('input',e=>{S[key]=parse(e.target.value);render();});
+bind('sL','L',parseFloat);bind('sx','x',parseFloat);bind('sn','logn',parseFloat);bind('sT','T',parseFloat);
+function seg(a,b,key,va,vb){$(a).onclick=()=>{S[key]=va;$(a).setAttribute('aria-pressed','true');$(b).setAttribute('aria-pressed','false');render();};
+  $(b).onclick=()=>{S[key]=vb;$(b).setAttribute('aria-pressed','true');$(a).setAttribute('aria-pressed','false');render();};}
+seg('bE','bH','carrier','e','hh');seg('bFin','bInf','barrier','finite','infinite');seg('bDos','bCum','view','dos','cum');
+$('cPsi').onchange=e=>{S.psi=e.target.checked;render();};
+let sweep=null;
+$('bSweep').onclick=()=>{
+  if(sweep){cancelAnimationFrame(sweep.id);sweep=null;$('bSweep').setAttribute('aria-pressed','false');$('bSweep').textContent='Sweep thickness';return;}
+  const t0=performance.now(),L0=S.L,ph=Math.acos(Math.max(-1,Math.min(1,(L0-16.5)/13.5)));
+  $('bSweep').setAttribute('aria-pressed','true');$('bSweep').textContent='Stop sweep';
+  const step=t=>{const L=16.5+13.5*Math.cos(ph+(t-t0)/1400);S.L=Math.round(L*10)/10;$('sL').value=S.L;render();sweep.id=requestAnimationFrame(step);};
+  sweep={id:requestAnimationFrame(step)};
+};
+new ResizeObserver(render).observe(cvL);new ResizeObserver(render).observe(cvR);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
+new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+render();
+})();
+</script>
+
+</body>
+</html>
